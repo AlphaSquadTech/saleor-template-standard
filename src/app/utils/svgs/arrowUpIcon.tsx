@@ -1,0 +1,16 @@
+export const ArrowUpIcon = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="12"
+    height="7"
+    viewBox="0 0 12 7"
+    fill="none"
+  >
+    <path
+      d="M11 6L6 1L1 6"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
