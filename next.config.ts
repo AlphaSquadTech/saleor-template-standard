@@ -19,7 +19,14 @@ function toHost(urlOrHost?: string | null): string | null {
 }
 
 function getRemoteImageHosts(): string[] {
-  const builtInHosts = ["images.unsplash.com"];
+  // Built-in hosts used by the default template content.
+  // Keep this list small and prefer env-based allowlisting for tenant-specific assets.
+  const builtInHosts = [
+    "images.unsplash.com",
+    // Saleor/WMS common asset buckets (seen in template seed content).
+    "wsm-saleor-assets.s3.us-west-2.amazonaws.com",
+    "wsmsaleormedia.s3.us-east-1.amazonaws.com",
+  ];
 
   const envHosts = (process.env.NEXT_PUBLIC_IMAGE_HOSTS || "")
     .split(",")
@@ -36,6 +43,12 @@ function getRemoteImageHosts(): string[] {
 
   return uniq([saleorHost, assetsHost, ...builtInHosts, ...envHosts].filter(Boolean) as string[]);
 }
+
+const HTTP_IMAGE_HOSTS = new Set([
+  // Some upstream content uses http:// links for these buckets.
+  "wsm-saleor-assets.s3.us-west-2.amazonaws.com",
+  "wsmsaleormedia.s3.us-east-1.amazonaws.com",
+]);
 
 const nextConfig: NextConfig = {
   // Configure headers for Apple Pay domain association file
@@ -65,11 +78,13 @@ const nextConfig: NextConfig = {
         pathname: "/media/**",
       },
       // Explicit allowlist for template consumers
-      ...getRemoteImageHosts().map((hostname) => ({
-        protocol: "https" as const,
-        hostname,
-        pathname: "/**",
-      })),
+      ...getRemoteImageHosts().flatMap((hostname) => {
+        const patterns = [{ protocol: "https" as const, hostname, pathname: "/**" }];
+        if (HTTP_IMAGE_HOSTS.has(hostname)) {
+          patterns.push({ protocol: "http" as const, hostname, pathname: "/**" });
+        }
+        return patterns;
+      }),
     ],
   },
 };
