@@ -197,21 +197,24 @@ export const NewsLetterClient = ({
         );
       }
 
-      const tenantName = process.env.NEXT_PUBLIC_API_URL || "";
-
-      const response = await fetch("https://smtp.wsm-dev.com/api/send-email", {
+      const response = await fetch("/api/form-submission", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          tenant_name: tenantName,
-          to: recipients,
-          cc: ccRecipients.length > 0 ? ccRecipients : undefined,
-          bcc: bccRecipients.length > 0 ? bccRecipients : undefined,
-          subject:
-            newsletterPageData?.emailSubject || "Newsletter Form Submission",
-          message: emailMessage,
+          formType: "newsletter",
+          pageSlug: "newsletter",
+          data: {
+            ...emailMessage,
+            _to: recipients,
+            _cc: ccRecipients.length > 0 ? ccRecipients : undefined,
+            _bcc: bccRecipients.length > 0 ? bccRecipients : undefined,
+            _subject:
+              newsletterPageData?.emailSubject || "Newsletter Form Submission",
+          },
+          metadata: {},
+          timestamp: new Date().toISOString(),
         }),
       });
 

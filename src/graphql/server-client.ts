@@ -1,23 +1,28 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
+import { cache } from "react";
 
-const createApolloServerClient = () => {
+function normalizeGraphqlUrl(input: string) {
+  let url = input.trim();
+  const lower = url.toLowerCase();
+  const hasGraphql = lower.endsWith("/graphql") || lower.endsWith("/graphql/");
+  if (!hasGraphql) {
+    url = url.replace(/\/+$/, "") + "/graphql/";
+  }
+  return url;
+}
+
+const createApolloServerClient = cache(() => {
   try {
     // Use a default URL if not configured to prevent client creation errors
     const raw = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api/graphql";
-    console.log(`[APOLLO] Creating client with URL: ${raw}`);
-
-    const normalizeGraphqlUrl = (input: string) => {
-      let url = input.trim();
-      const lower = url.toLowerCase();
-      const hasGraphql = lower.endsWith('/graphql') || lower.endsWith('/graphql/');
-      if (!hasGraphql) {
-        url = url.replace(/\/+$/, '') + '/graphql/';
-      }
-      return url;
-    };
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`[APOLLO] Creating client with URL: ${raw}`);
+    }
 
     const apiUrl = normalizeGraphqlUrl(raw);
-    console.log(`[APOLLO] Normalized URL: ${apiUrl}`);
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`[APOLLO] Normalized URL: ${apiUrl}`);
+    }
     
     const httpLink = createHttpLink({
       uri: apiUrl,
@@ -35,7 +40,9 @@ const createApolloServerClient = () => {
       },
     });
 
-    console.log(`[APOLLO] Client created successfully`);
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`[APOLLO] Client created successfully`);
+    }
     return client;
   } catch (error) {
     console.error(`[APOLLO] Failed to create Apollo client:`, error);
@@ -50,6 +57,6 @@ const createApolloServerClient = () => {
       ssrMode: true,
     });
   }
-};
+});
 
 export default createApolloServerClient;

@@ -79,9 +79,14 @@ const nextConfig: NextConfig = {
       },
       // Explicit allowlist for template consumers
       ...getRemoteImageHosts().flatMap((hostname) => {
-        const patterns = [{ protocol: "https" as const, hostname, pathname: "/**" }];
+        const patterns: Array<{
+          protocol: "https" | "http";
+          hostname: string;
+          pathname: string;
+          port?: string;
+        }> = [{ protocol: "https", hostname, pathname: "/**" }];
         if (HTTP_IMAGE_HOSTS.has(hostname)) {
-          patterns.push({ protocol: "http" as const, hostname, pathname: "/**" });
+          patterns.push({ protocol: "http", hostname, pathname: "/**" });
         }
         return patterns;
       }),

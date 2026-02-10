@@ -1,6 +1,11 @@
 import { gql } from "@apollo/client";
 import createApolloServerClient from "../server-client";
 
+const DEBUG_DYNAMIC_PAGES =
+  process.env.NODE_ENV !== "production" &&
+  (process.env.DEBUG_DYNAMIC_PAGES === "1" ||
+    process.env.DEBUG_DYNAMIC_PAGES === "true");
+
 export const GET_DYNAMIC_PAGE_BY_SLUG = gql`
   query DynamicPageBySlug($slug: String!) {
     page(slug: $slug) {
@@ -67,15 +72,11 @@ type DynamicPageResponse = {
 export async function fetchDynamicPageBySlug(slug: string): Promise<DynamicPageData | null> {
   // Check if we're in a build context and skip API calls
   if (typeof window === 'undefined' && process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
-    console.log('[DEBUG] Build time detected, skipping API call');
     return null;
   }
-
-  console.log(`[DEBUG] Fetching page with slug: "${slug}"`);
   
   // Get API URL at runtime
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  console.log(`[DEBUG] API URL: ${apiUrl}`);
   
   if (!apiUrl) {
     console.warn("[DYNAMIC PAGES] API URL not configured, skipping dynamic page fetch");
@@ -83,9 +84,7 @@ export async function fetchDynamicPageBySlug(slug: string): Promise<DynamicPageD
   }
 
   try {
-    console.log(`[DEBUG] Creating Apollo client...`);
     const client = createApolloServerClient();
-    console.log(`[DEBUG] Apollo client created successfully`);
     
     const timeoutPromise = new Promise<never>((_, reject) =>
       setTimeout(() => reject(new Error("Dynamic page fetch timeout")), 5000)
@@ -98,18 +97,13 @@ export async function fetchDynamicPageBySlug(slug: string): Promise<DynamicPageD
       errorPolicy: "ignore",
     });
 
-    console.log(`[DEBUG] Executing GraphQL query...`);
     const result = await Promise.race([queryPromise, timeoutPromise]);
-    console.log(`[DEBUG] Query result:`, JSON.stringify(result?.data, null, 2));
     
     let pageData = result?.data?.page;
 
     // If no page found, check for HTML widgets in shop metadata
     if (!pageData || !pageData.isPublished) {
-      console.log(`[DEBUG] No published page found for slug: "${slug}", checking HTML widgets in metadata...`);
-      
       const shopMetadata = result?.data?.shop?.metadata || [];
-      console.log(`[DEBUG] Shop metadata items found: ${shopMetadata.length}`);
       
       // Find widget with matching slug
       let matchingWidget = null;
@@ -117,7 +111,6 @@ export async function fetchDynamicPageBySlug(slug: string): Promise<DynamicPageD
         const widget = parseHtmlWidgetFromMetadata(metadataItem.key, metadataItem.value);
         if (widget && widget.slug === slug && widget.isActive) {
           matchingWidget = widget;
-          console.log(`[DEBUG] Found matching widget: "${widget.name}" with slug: "${widget.slug}"`);
           break;
         }
       }
@@ -125,13 +118,14 @@ export async function fetchDynamicPageBySlug(slug: string): Promise<DynamicPageD
       if (matchingWidget) {
         // Convert widget to page data format
         pageData = convertWidgetToPageData(matchingWidget);
-        console.log(`[DEBUG] Converted widget to page data: "${pageData.title}"`);
       } else {
-        console.log(`[DEBUG] No matching HTML widget found for slug: "${slug}"`);
+        if (DEBUG_DYNAMIC_PAGES) {
+          console.log(`[DYNAMIC PAGES] No page/widget for slug: "${slug}"`);
+        }
         return null;
       }
-    } else {
-      console.log(`[DEBUG] Successfully fetched published page: "${pageData.title}"`);
+    } else if (DEBUG_DYNAMIC_PAGES) {
+      console.log(`[DYNAMIC PAGES] Fetched published page: "${pageData.title}"`);
     }
 
     // Add computed excerpt if content exists
@@ -143,10 +137,9 @@ export async function fetchDynamicPageBySlug(slug: string): Promise<DynamicPageD
     return pageData;
   } catch (err) {
     console.error(
-      `[DEBUG] Failed to fetch dynamic page by slug "${slug}":`,
+      `[DYNAMIC PAGES] Failed to fetch dynamic page by slug "${slug}":`,
       err instanceof Error ? err.message : "Unknown error"
     );
-    console.error(`[DEBUG] Full error details:`, JSON.stringify(err, null, 2));
     
     // Don't throw the error - return null to handle gracefully
     return null;
@@ -209,13 +202,14 @@ function convertWidgetToPageData(widget: { html?: string; css?: string; js?: str
   
   // If HTML contains full document structure, extract body content
   if (extractedContent.includes('<!DOCTYPE html>') || extractedContent.includes('<html>')) {
-    console.log(`[DEBUG] Extracting body content from full HTML document`);
+    if (DEBUG_DYNAMIC_PAGES) {
+      console.log(`[DYNAMIC PAGES] Extracting <body> content from full HTML document`);
+    }
     
     // Parse the HTML to extract body content
     const bodyMatch = extractedContent.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
     if (bodyMatch) {
       extractedContent = bodyMatch[1];
-      console.log(`[DEBUG] Extracted body content, length: ${extractedContent.length}`);
     }
     
     // Also extract any styles from head if not already in CSS field
@@ -228,7 +222,6 @@ function convertWidgetToPageData(widget: { html?: string; css?: string; js?: str
         }).join('\n');
         
         extractedStyles = extractedStylesFromHead;
-        console.log(`[DEBUG] Extracted styles from head, length: ${extractedStyles.length}`);
       }
     }
   }

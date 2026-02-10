@@ -27,6 +27,8 @@ interface TypedGraphQLError {
   path?: readonly (string | number)[];
 }
 
+const DEBUG_AUTH = process.env.NODE_ENV !== "production";
+
 function normalizeGraphqlUrl(raw?: string) {
   if (!raw) return undefined;
   let url = raw.trim();
@@ -73,11 +75,11 @@ const resolvePendingRequests = (newToken: string | null) => {
 async function performTokenRefresh(endpoint: string): Promise<{ token: string | null; refreshToken: string | null }> {
   const refreshToken = typeof window !== 'undefined' ? localStorage.getItem('refreshToken') : null;
   if (!refreshToken) {
-    console.log('No refresh token available');
+    if (DEBUG_AUTH) console.log('No refresh token available');
     throw new Error('No refresh token');
   }
   
-  console.log('Attempting token refresh...');
+  if (DEBUG_AUTH) console.log('Attempting token refresh...');
   
   try {
     const res = await fetch(endpoint, {
@@ -105,7 +107,7 @@ async function performTokenRefresh(endpoint: string): Promise<{ token: string | 
     }
     
     const json = await res.json();
-    console.log('Token refresh response:', json);
+    if (DEBUG_AUTH) console.log('Token refresh response received');
     
     const payload = json?.data?.tokenRefresh;
     const errors = json.errors || payload?.errors || [];
@@ -120,7 +122,7 @@ async function performTokenRefresh(endpoint: string): Promise<{ token: string | 
       throw new Error('No token in refresh response');
     }
     
-    console.log('Token refresh successful');
+    if (DEBUG_AUTH) console.log('Token refresh successful');
     return { 
       token: payload.token, 
       refreshToken: payload.refreshToken || null 
@@ -133,7 +135,7 @@ async function performTokenRefresh(endpoint: string): Promise<{ token: string | 
 
 // Helper function to handle logout and redirect
 async function forceLogout() {
-  console.log("forceLogout called");
+  if (DEBUG_AUTH) console.log("forceLogout called");
 
   if (typeof window === "undefined") return;
 
@@ -194,21 +196,23 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
     return isUnauthenticated || isTokenExpired;
   });
 
-  // Debug log
-  console.log('Auth error detected:', { 
-    hasAuthError: !!authError, 
-    graphQLErrors: errors.map(e => ({
-      message: e.message,
-      path: e.path,
-      code: e.extensions?.exception?.code || e.extensions?.code,
-    })),
-    isServer: typeof window === 'undefined',
-    authError: authError ? {
-      message: authError.message,
-      code: authError.extensions?.exception?.code || authError.extensions?.code,
-      path: authError.path
-    } : undefined
-  });
+  if (DEBUG_AUTH) {
+    console.log('Auth error detected:', {
+      hasAuthError: !!authError,
+      graphQLErrors: errors.map((e) => ({
+        message: e.message,
+        path: e.path,
+        code: e.extensions?.exception?.code || e.extensions?.code,
+      })),
+      authError: authError
+        ? {
+            message: authError.message,
+            code: authError.extensions?.exception?.code || authError.extensions?.code,
+            path: authError.path,
+          }
+        : undefined,
+    });
+  }
 
   // If not an auth error or running on server, do nothing
   if (!authError || typeof window === 'undefined') {
