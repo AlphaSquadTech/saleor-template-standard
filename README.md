@@ -57,4 +57,3 @@ See:
 
 - `APPLE_PAY_QUICK_START.md`
 - `APPLE_PAY_SETUP.md`
-
