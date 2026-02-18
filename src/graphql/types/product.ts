@@ -26,6 +26,12 @@ export type Product = {
       };
     };
   };
+  defaultVariant?: {
+    pricing: {
+      price: { gross: { amount: number; currency: string } };
+      priceUndiscounted: { gross: { amount: number; currency: string } };
+    };
+  };
   media: [
     {
       url: string;

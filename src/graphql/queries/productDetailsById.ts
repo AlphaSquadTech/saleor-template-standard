@@ -6,6 +6,25 @@ export const PRODUCT_DETAILS_BY_ID = gql`
       id
       name
       slug
+      defaultVariant {
+        id
+        sku
+        quantityAvailable
+        pricing {
+          price {
+            gross {
+              amount
+              currency
+            }
+          }
+          priceUndiscounted {
+            gross {
+              amount
+              currency
+            }
+          }
+        }
+      }
       description
       metadata {
         key
@@ -176,11 +195,19 @@ export interface ProductMetadata {
   value: string;
 }
 
+export interface DefaultVariant {
+  id: string;
+  sku: string;
+  quantityAvailable: number | null;
+  pricing: ProductVariantPricing | null;
+}
+
 export interface ProductDetailsByIdData {
   product: {
     id: string;
     name: string;
     slug: string;
+    defaultVariant: DefaultVariant | null;
     description: string | null;
     metadata: ProductMetadata[];
     media: ProductMedia[];

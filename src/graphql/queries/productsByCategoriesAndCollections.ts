@@ -26,6 +26,16 @@ export const PRODUCTS_BY_CATEGORIES_AND_COLLECTIONS = `
           category { id name }
           collections { id name }
           media { id url alt }
+          defaultVariant {
+            pricing {
+              price {
+                gross {
+                  amount
+                  currency
+                }
+              }
+            }
+          }
           pricing {
             priceRange {
               start { gross { amount currency } }

@@ -33,6 +33,22 @@ export const GET_FEATURED_PRODUCTS = gql`
                 }
               }
             }
+            defaultVariant {
+              pricing {
+                price {
+                  gross {
+                    amount
+                    currency
+                  }
+                }
+                priceUndiscounted {
+                  gross {
+                    amount
+                    currency
+                  }
+                }
+              }
+            }
             media {
               url
             }

@@ -68,6 +68,7 @@ interface YMMProduct {
   };
   price_min: number | null;
   price_max: number | null;
+  default_variant_price?: number;
   media: Array<{
     id: number;
     url: string;
@@ -340,6 +341,7 @@ function SearchPageContent() {
         category: product.category || null,
         price_min: product.price_min,
         price_max: product.price_max,
+        default_variant_price: product.default_variant_price,
         pricing: {
           onSale: null,
           priceRange: {
@@ -628,7 +630,7 @@ function SearchPageContent() {
                         id={product.node.id}
                         name={product.node.name}
                         image={imageUrl}
-                        price={product.node.price_min || 0}
+                        price={product.node.default_variant_price || 0}
                         href={href}
                         category_id={product.node.category?.id || ""}
                         category={product.node.category?.name || ""}
@@ -652,7 +654,7 @@ function SearchPageContent() {
                         id={product.node.id}
                         name={product.node.name}
                         image={imageUrl}
-                        price={product.node?.price_min || 0}
+                        price={product.node?.default_variant_price || 0}
                         href={href}
                         category_id={product.node.category?.id || ""}
                         category={product.node.category?.name || ""}
