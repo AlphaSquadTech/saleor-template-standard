@@ -77,7 +77,18 @@ declare global {
     onpaymentmethodselected: ((event: unknown) => void) | null;
     onshippingmethodselected: ((event: unknown) => void) | null;
     onshippingcontactselected: ((event: unknown) => void) | null;
-    oncancel: ((event: Event) => void) | null;
+    oncancel: ((event: ApplePayCancelEvent) => void) | null;
+  }
+
+  interface ApplePaySessionError {
+    code: string;
+    message?: string;
+    info?: unknown;
+    contactField?: unknown;
+  }
+
+  interface ApplePayCancelEvent extends Event {
+    sessionError?: ApplePaySessionError;
   }
 
   interface ApplePayPaymentRequest {
@@ -137,8 +148,8 @@ declare global {
 
   interface PayPalActions {
     order?: {
-      capture: () => Promise<any>;
-      get: () => Promise<any>;
+      capture: () => Promise<unknown>;
+      get: () => Promise<unknown>;
     };
   }
 
@@ -236,7 +247,7 @@ declare global {
 
   interface PayPalSDKv6Instance {
     createCardFieldsSavePaymentSession: () => PayPalSavePaymentSession;
-    createCardFieldsPaymentSession?: () => any; // For payment flows
+    createCardFieldsPaymentSession?: () => unknown; // For payment flows
   }
 
   interface PayPalSavePaymentSession {
@@ -300,9 +311,8 @@ export interface CreatePaymentTokenResponse {
   venmo: { username: string } | null;
 }
 
-export interface ListSavedPaymentMethodsInput {
-  // Empty - user is identified from JWT token
-}
+// Empty - user is identified from JWT token
+export type ListSavedPaymentMethodsInput = Record<string, never>;
 
 export interface ListSavedPaymentMethodsResponse {
   savedPaymentMethods: SavedPaymentMethod[];

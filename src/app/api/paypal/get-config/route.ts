@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createRemoteJWKSet, jwtVerify } from "jose";
 
 // Types for PayPal Gateway Configuration
 interface GatewayError {
@@ -54,36 +55,16 @@ interface DecodedToken {
 }
 
 /**
- * Decode JWT token without verification (for extracting payload only)
- * In production, you should verify the signature for security
+ * Verify JWT token using Saleor JWKS endpoint and extract the payload.
  */
-function decodeJWT(token: string): DecodedToken | null {
+async function verifyJWT(token: string, saleorBaseUrl: string): Promise<DecodedToken | null> {
   try {
-    // Split the token into parts
-    const parts = token.split(".");
-    if (parts.length !== 3) {
-      console.error("❌ Invalid JWT format");
-      return null;
-    }
-
-    // Decode the payload (second part)
-    const payload = parts[1];
-    // Replace URL-safe characters and add padding if needed
-    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
-    const paddedBase64 = base64.padEnd(
-      base64.length + ((4 - (base64.length % 4)) % 4),
-      "=",
-    );
-
-    // Decode base64
-    const jsonPayload = Buffer.from(paddedBase64, "base64").toString("utf-8");
-
-    // Parse JSON
-    const decoded = JSON.parse(jsonPayload) as DecodedToken;
-
-    return decoded;
+    const jwksUrl = new URL("/.well-known/jwks.json", saleorBaseUrl);
+    const JWKS = createRemoteJWKSet(jwksUrl);
+    const { payload } = await jwtVerify(token, JWKS);
+    return payload as unknown as DecodedToken;
   } catch (error) {
-    console.error("❌ Error decoding JWT:", error);
+    console.error("❌ JWT verification failed:", error);
     return null;
   }
 }
@@ -130,16 +111,16 @@ export async function POST(request: NextRequest) {
     // Get auth token from cookies
     const token = request.cookies.get("token")?.value;
 
-    // Decode JWT to extract user_id
+    // Verify JWT and extract user_id
     let saleorUserId = "";
 
     if (token) {
-      const decoded = decodeJWT(token);
-      if (decoded && decoded.user_id) {
-        saleorUserId = decoded.user_id;
-        console.log("✅ Decoded user_id from JWT:", saleorUserId);
+      const saleorBaseUrl = new URL(apiUrl).origin;
+      const verified = await verifyJWT(token, saleorBaseUrl);
+      if (verified?.user_id) {
+        saleorUserId = verified.user_id;
       } else {
-        console.warn("⚠️ Could not decode user_id from token");
+        console.warn("⚠️ Could not verify token or extract user_id");
       }
     } else {
       console.warn("⚠️ No authentication token found");

@@ -14,10 +14,12 @@ function buildIframeSrcdoc({
   paymentAppUrl,
   saleorApiUrl,
   authToken,
+  paypalSdkUrl,
 }: {
   paymentAppUrl: string;
   saleorApiUrl: string;
   authToken: string;
+  paypalSdkUrl: string;
 }) {
   return `
 <!DOCTYPE html>
@@ -130,7 +132,7 @@ function buildIframeSrcdoc({
     <p id="init-error" class="error-text"></p>
   </div>
 
-  <script src="https://www.sandbox.paypal.com/web-sdk/v6/core"><\/script>
+  <script src="${paypalSdkUrl}"><\/script>
   <script>
   var PAYMENT_APP_URL = ${JSON.stringify(paymentAppUrl)};
   var SALEOR_API_URL = ${JSON.stringify(saleorApiUrl)};
@@ -360,8 +362,21 @@ export default function AddCardModal({
     const paymentAppUrl = process.env.NEXT_PUBLIC_PAYPAL_APP_URL || "";
     const saleorApiUrl = process.env.NEXT_PUBLIC_API_URL || "";
     const authToken = localStorage.getItem("token") || "";
+    const paypalSdkUrl =
+      process.env.NEXT_PUBLIC_PAYPAL_ENV === "sandbox"
+        ? process.env.NEXT_PUBLIC_PAYPAL_SDK_URL_SANDBOX
+        : process.env.NEXT_PUBLIC_PAYPAL_SDK_URL_PRODUCTION;
 
-    const html = buildIframeSrcdoc({ paymentAppUrl, saleorApiUrl, authToken });
+    if (!paypalSdkUrl) {
+      console.error("PayPal SDK URL is not configured");
+      return;
+    }
+    const html = buildIframeSrcdoc({
+      paymentAppUrl,
+      saleorApiUrl,
+      authToken,
+      paypalSdkUrl,
+    });
     const blob = new Blob([html], { type: "text/html" });
     const url = URL.createObjectURL(blob);
     setBlobUrl(url);

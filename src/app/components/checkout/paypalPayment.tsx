@@ -90,7 +90,7 @@ export function PayPalPayment({
   // NEW: Card fields state
   const [showCardFields, setShowCardFields] = useState(false);
   const [cardFieldsReady, setCardFieldsReady] = useState(false);
-  const cardFieldsRef = useRef<any>(null);
+  const cardFieldsRef = useRef<PayPalCardFieldsInstance | null>(null);
   const cardFieldsRendered = useRef(false);
   const [currentTransactionId, setCurrentTransactionId] = useState<
     string | null
@@ -289,7 +289,7 @@ export function PayPalPayment({
     try {
       window.paypal
         .Buttons({
-          createOrder: async (data: any, actions: any) => {
+          createOrder: async (data: PayPalCreateOrderData, _actions: PayPalActions) => {
             setIsProcessingPayment({
               isModalOpen: true,
               paymentProcessingLoading: true,
@@ -922,7 +922,7 @@ export function PayPalPayment({
               };
 
               // ENHANCED: Cancel handler with sessionError details
-              session.oncancel = (event: any) => {
+              session.oncancel = (event: ApplePayCancelEvent) => {
                 console.log("Apple Pay session cancelled by user");
                 console.log("Cancel event:", event);
 
@@ -1132,7 +1132,7 @@ export function PayPalPayment({
 
           button.addEventListener("click", async () => {
             try {
-              const paymentDataRequest: any = {
+              const paymentDataRequest: PaymentDataRequest = {
                 apiVersion: 2,
                 apiVersionMinor: 0,
                 allowedPaymentMethods: googlePayConfig.allowedPaymentMethods,
