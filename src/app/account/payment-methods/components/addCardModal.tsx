@@ -363,9 +363,9 @@ export default function AddCardModal({
     const saleorApiUrl = process.env.NEXT_PUBLIC_API_URL || "";
     const authToken = localStorage.getItem("token") || "";
     const paypalSdkUrl =
-      process.env.NEXT_PUBLIC_PAYPAL_ENV === "sandbox"
-        ? process.env.NEXT_PUBLIC_PAYPAL_SDK_URL_SANDBOX
-        : process.env.NEXT_PUBLIC_PAYPAL_SDK_URL_PRODUCTION;
+      process.env.NEXT_PUBLIC_PAYPAL_ENV === "production"
+        ? "https://www.paypal.com/web-sdk/v6/core"
+        : "https://www.sandbox.paypal.com/web-sdk/v6/core";
 
     if (!paypalSdkUrl) {
       console.error("PayPal SDK URL is not configured");
