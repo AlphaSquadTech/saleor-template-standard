@@ -32,6 +32,10 @@ export default function AccountLayout({
       name: 'Address Book',
       href: '/account/address',
     },
+    {
+      name: "Payment Methods",
+      href: "/account/payment-methods",
+    },
   ];
 
 
@@ -42,12 +46,12 @@ export default function AccountLayout({
         <h1 className="text-2xl md:text-3xl lg:text-5xl font-normal font-primary text-[var(--color-secondary-800)]">MY ACCOUNT</h1>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-16">
-        <div className="lg:col-span-1 flex lg:flex-col border-r border-[var(--color-secondary-200)] gap-4 md:gap-6 lg:gap-5">
+        <div className="lg:col-span-1 flex lg:flex-col border-r border-[var(--color-secondary-200)] gap-4 md:gap-3">
           {navigationItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className={`uppercase block font-medium text-sm md:text-lg lg:text-xl font-secondary ${pathname === item.href ? 'text-[var(--color-secondary-800)]' : 'text-[var(--color-secondary-400)] hover:bg-gray-50'}`}
+              className={`uppercase block font-bold font-secondary text-sm md:text-lg ${pathname === item.href ? 'text-[var(--color-primary)]' : 'text-[var(--color-secondary-400)] hover:text-[var(--color-primary)]'}`}
             >
               {item.name}
             </Link>

@@ -287,7 +287,7 @@ export function SaleorNativePayment({
   const filteredPaymentGateways = availablePaymentGateways.filter(
     (gateway) =>
       !gateway.id.toLowerCase().includes("dummy") &&
-      !gateway.name.toLowerCase().includes("dummy")
+      !gateway.name.toLowerCase().includes("dummy"),
   );
 
   const router = useRouter();
@@ -303,14 +303,19 @@ export function SaleorNativePayment({
     fullName: "",
   });
 
-  const [selectedPaymentGateway, setSelectedPaymentGateway] = useState<string>("");
+  const [selectedPaymentGateway, setSelectedPaymentGateway] =
+    useState<string>("");
 
   useEffect(() => {
-    if (!disabled && filteredPaymentGateways.length > 0 && !selectedPaymentGateway) {
+    if (
+      !disabled &&
+      filteredPaymentGateways.length > 0 &&
+      !selectedPaymentGateway
+    ) {
       setSelectedPaymentGateway(filteredPaymentGateways[0].id);
     }
   }, [filteredPaymentGateways]);
-  
+
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string>
   >({});
@@ -450,7 +455,7 @@ export function SaleorNativePayment({
         });
       }
     },
-    [validationErrors]
+    [validationErrors],
   );
 
   // Function to perform Kount fraud check
@@ -468,7 +473,7 @@ export function SaleorNativePayment({
 
     // Check if selected payment method requires fraud detection
     const shouldPerformFraudCheck = activePaymentMethods.some(
-      (method) => method.toLowerCase() === selectedPaymentGateway.toLowerCase()
+      (method) => method.toLowerCase() === selectedPaymentGateway.toLowerCase(),
     );
 
     if (!shouldPerformFraudCheck) {
@@ -617,9 +622,8 @@ export function SaleorNativePayment({
       };
 
       // Perform fraud check
-      const fraudCheckResponse = await kountApi.performFraudCheck(
-        fraudCheckRequest
-      );
+      const fraudCheckResponse =
+        await kountApi.performFraudCheck(fraudCheckRequest);
 
       // Store Kount order data for later update calls
       kountData = {
@@ -665,7 +669,7 @@ export function SaleorNativePayment({
         // Handle checkout resolution errors immediately
         if (error.message?.includes("Couldn't resolve to a node")) {
           throw new Error(
-            "Your checkout session has expired during fraud check. Please refresh the page and try again."
+            "Your checkout session has expired during fraud check. Please refresh the page and try again.",
           );
         }
         throw error;
@@ -708,7 +712,7 @@ export function SaleorNativePayment({
         error.message.includes("Couldn't resolve to a node")
       ) {
         throw new Error(
-          "Your checkout session has expired. Please refresh the page and try again."
+          "Your checkout session has expired. Please refresh the page and try again.",
         );
       }
 
@@ -743,7 +747,10 @@ export function SaleorNativePayment({
       isSuccess: boolean,
       paymentToken: string,
       cardNumber: string,
-      providedKountData?: { kountOrderId: string; transactionId: string } | null
+      providedKountData?: {
+        kountOrderId: string;
+        transactionId: string;
+      } | null,
     ) => {
       // Use provided data first, then fallback to state data
       const dataToUse =
@@ -757,7 +764,7 @@ export function SaleorNativePayment({
         const bin = cardNumber.replace(/\s/g, "").substring(0, 6);
         const detectedPaymentType = detectPaymentType(
           cardNumber,
-          selectedPaymentGateway
+          selectedPaymentGateway,
         );
 
         const updateRequest: KountOrderUpdateRequest = {
@@ -787,7 +794,7 @@ export function SaleorNativePayment({
         // Don't fail the payment process if Kount update fails
       }
     },
-    [kountOrderData, lastFraudCheckData]
+    [kountOrderData, lastFraudCheckData],
   );
 
   const processPayment = useCallback(async () => {
@@ -806,7 +813,7 @@ export function SaleorNativePayment({
 
       if (!checkoutValidation.data?.checkout) {
         onError(
-          "Your checkout session has expired. Please refresh the page and try again."
+          "Your checkout session has expired. Please refresh the page and try again.",
         );
         return;
       }
@@ -822,11 +829,11 @@ export function SaleorNativePayment({
         validationError.message.includes("Couldn't resolve to a node")
       ) {
         onError(
-          "Your checkout session has expired. Please refresh the page and try again."
+          "Your checkout session has expired. Please refresh the page and try again.",
         );
       } else {
         onError(
-          "Unable to validate checkout. Please refresh the page and try again."
+          "Unable to validate checkout. Please refresh the page and try again.",
         );
       }
       return;
@@ -835,7 +842,7 @@ export function SaleorNativePayment({
     // Check reCAPTCHA verification before payment if enabled
     if (config.isRecaptchaEnabledFor("checkout") && !recaptchaValue) {
       onError(
-        "Please complete the reCAPTCHA verification before proceeding with payment."
+        "Please complete the reCAPTCHA verification before proceeding with payment.",
       );
       return;
     }
@@ -901,7 +908,7 @@ export function SaleorNativePayment({
           };
           localStorage.setItem(
             "pendingPaymentData",
-            JSON.stringify(paymentData)
+            JSON.stringify(paymentData),
           );
         } catch {
           // Continue if storage fails
@@ -920,13 +927,13 @@ export function SaleorNativePayment({
             // Handle checkout resolution errors immediately
             if (error.message?.includes("Couldn't resolve to a node")) {
               throw new Error(
-                "Your checkout session has expired while attaching customer. Please refresh the page and try again."
+                "Your checkout session has expired while attaching customer. Please refresh the page and try again.",
               );
             }
             // Handle already attached error specifically
             if (
               error.message?.includes(
-                "cannot reassign a checkout that is already attached"
+                "cannot reassign a checkout that is already attached",
               )
             ) {
               setIsCustomerAttached(true);
@@ -948,7 +955,7 @@ export function SaleorNativePayment({
           if (
             error instanceof Error &&
             error.message.includes(
-              "cannot reassign a checkout that is already attached"
+              "cannot reassign a checkout that is already attached",
             )
           ) {
             setIsCustomerAttached(true);
@@ -968,7 +975,7 @@ export function SaleorNativePayment({
             // Handle checkout resolution errors immediately
             if (error.message?.includes("Couldn't resolve to a node")) {
               throw new Error(
-                "Your checkout session has expired while setting delivery method. Please refresh the page and try again."
+                "Your checkout session has expired while setting delivery method. Please refresh the page and try again.",
               );
             }
             throw error;
@@ -986,7 +993,7 @@ export function SaleorNativePayment({
               success: false,
             });
             onError(
-              `Failed to set delivery method: ${deliveryErrors[0].message}`
+              `Failed to set delivery method: ${deliveryErrors[0].message}`,
             );
             return;
           }
@@ -1016,17 +1023,17 @@ export function SaleorNativePayment({
 
         const totalValue = lineItems.reduce(
           (sum, item) => sum + item.price * item.quantity,
-          0
+          0,
         );
         const paymentMethodName = selectedPaymentGateway.includes(
-          "authorize_net"
+          "authorize_net",
         )
           ? "authorize_net"
           : selectedPaymentGateway.includes("stripe")
-          ? "stripe"
-          : selectedPaymentGateway.includes("dummy")
-          ? "dummy"
-          : "other";
+            ? "stripe"
+            : selectedPaymentGateway.includes("dummy")
+              ? "dummy"
+              : "other";
 
         gtmAddPaymentInfo(
           products,
@@ -1034,7 +1041,7 @@ export function SaleorNativePayment({
           totalValue,
           undefined,
           paymentMethodName,
-          gtmConfig?.container_id
+          gtmConfig?.container_id,
         );
       }
 
@@ -1043,7 +1050,7 @@ export function SaleorNativePayment({
 
       if (filteredPaymentGateways.length > 0) {
         selectedGateway = filteredPaymentGateways.find(
-          (gateway) => gateway.id === selectedPaymentGateway
+          (gateway) => gateway.id === selectedPaymentGateway,
         );
       } else {
         // Fallback: Get gateway from checkout if not provided via props
@@ -1055,7 +1062,7 @@ export function SaleorNativePayment({
             (gateway: {
               id: string;
               config?: Array<{ field: string; value: string }>;
-            }) => gateway.id === selectedPaymentGateway
+            }) => gateway.id === selectedPaymentGateway,
           );
       }
 
@@ -1067,7 +1074,7 @@ export function SaleorNativePayment({
           success: false,
         });
         onError(
-          `Selected payment gateway "${selectedPaymentGateway}" is not available`
+          `Selected payment gateway "${selectedPaymentGateway}" is not available`,
         );
         return;
       }
@@ -1078,10 +1085,10 @@ export function SaleorNativePayment({
         // Extract Authorize.Net credentials
         const gatewayConfig = selectedGateway.config || [];
         const clientKey = gatewayConfig.find(
-          (c: { field: string; value: string }) => c.field === "client_key"
+          (c: { field: string; value: string }) => c.field === "client_key",
         )?.value;
         const apiLoginID = gatewayConfig.find(
-          (c: { field: string; value: string }) => c.field === "api_login_id"
+          (c: { field: string; value: string }) => c.field === "api_login_id",
         )?.value;
 
         if (!clientKey || !apiLoginID) {
@@ -1101,8 +1108,8 @@ export function SaleorNativePayment({
           if (typeof window.Accept === "undefined") {
             reject(
               new Error(
-                "Authorize.Net Accept.js not loaded. Please refresh the page and try again."
-              )
+                "Authorize.Net Accept.js not loaded. Please refresh the page and try again.",
+              ),
             );
             return;
           }
@@ -1133,7 +1140,7 @@ export function SaleorNativePayment({
                 // Use the OTS token from Authorize.Net
                 resolve(response.opaqueData?.dataValue || "");
               }
-            }
+            },
           );
         });
       } else if (selectedPaymentGateway === "saleor.app.payment.stripe") {
@@ -1151,7 +1158,7 @@ export function SaleorNativePayment({
           success: false,
         });
         onError(
-          `Payment gateway "${selectedPaymentGateway}" is not supported yet`
+          `Payment gateway "${selectedPaymentGateway}" is not supported yet`,
         );
         return;
       }
@@ -1171,7 +1178,7 @@ export function SaleorNativePayment({
         // Handle checkout resolution errors immediately
         if (error.message?.includes("Couldn't resolve to a node")) {
           throw new Error(
-            "Your checkout session has expired. Please refresh the page and try again."
+            "Your checkout session has expired. Please refresh the page and try again.",
           );
         }
         throw error;
@@ -1210,7 +1217,7 @@ export function SaleorNativePayment({
         // Handle checkout resolution errors immediately
         if (error.message?.includes("Couldn't resolve to a node")) {
           throw new Error(
-            "Your checkout session has expired during payment completion. Please refresh the page and try again."
+            "Your checkout session has expired during payment completion. Please refresh the page and try again.",
           );
         }
         throw error;
@@ -1237,7 +1244,7 @@ export function SaleorNativePayment({
           true,
           paymentToken,
           cardData.cardNumber,
-          currentFraudCheckData
+          currentFraudCheckData,
         );
 
         setIsProcessingPayment({
@@ -1252,7 +1259,7 @@ export function SaleorNativePayment({
         const orderTotal = order.total.gross.amount;
 
         router.push(
-          `/order-confirmation?orderId=${orderId}&orderNumber=${orderNumber}&total=${orderTotal}`
+          `/order-confirmation?orderId=${orderId}&orderNumber=${orderNumber}&total=${orderTotal}`,
         );
         onSuccess();
       } else {
@@ -1263,7 +1270,7 @@ export function SaleorNativePayment({
           success: false,
         });
         onError(
-          "Payment completed but no order was created. Please contact support."
+          "Payment completed but no order was created. Please contact support.",
         );
       }
     } catch (error) {
@@ -1273,7 +1280,7 @@ export function SaleorNativePayment({
           false,
           paymentToken,
           cardData.cardNumber,
-          currentFraudCheckData
+          currentFraudCheckData,
         );
       }
 
@@ -1291,7 +1298,7 @@ export function SaleorNativePayment({
           error.message.includes("checkout session has expired")
         ) {
           onError(
-            "Your checkout session has expired. Please refresh the page and try again."
+            "Your checkout session has expired. Please refresh the page and try again.",
           );
         } else {
           onError(`Payment failed: ${error.message}`);
@@ -1345,7 +1352,7 @@ export function SaleorNativePayment({
       e.preventDefault();
       await processPayment();
     },
-    [processPayment]
+    [processPayment],
   );
 
   // Store processPayment in a ref to avoid infinite loop

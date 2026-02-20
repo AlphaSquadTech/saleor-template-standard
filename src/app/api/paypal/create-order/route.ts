@@ -1,5 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
 
+const TRANSACTION_INITIALIZE_CARD = `
+  mutation TransactionInitialize(
+    $id: ID!
+    $amount: PositiveDecimal!
+    $paymentGateway: PaymentGatewayToInitialize!
+  ) {
+    transactionInitialize(
+      id: $id
+      amount: $amount
+      paymentGateway: $paymentGateway
+    ) {
+      transaction {
+        id
+        actions
+      }
+      transactionEvent {
+        pspReference
+        amount {
+          amount
+          currency
+        }
+        type
+      }
+      data
+      errors {
+        field
+        message
+        code
+      }
+    }
+  }
+`;
+
 const TRANSACTION_INITIALIZE = `
   mutation TransactionInitialize(
     $id: ID!
@@ -35,16 +68,30 @@ const TRANSACTION_INITIALIZE = `
   }
 `;
 
+function generateIdempotencyKey() {
+  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { checkoutId, amount, currency = "USD" } = body;
+    const {
+      checkoutId,
+      amount,
+      currency = "USD",
+      paymentMethodType = "paypal", // NEW: default to paypal
+      vaultId, // NEW: for saved cards
+      saleorUserId, // NEW: for logged-in users
+    } = body;
 
+    const savePaymentMethodCookie =
+      request.cookies.get("savePaymentMethod")?.value;
+    const savePaymentMethod = savePaymentMethodCookie === "true";
 
     if (!checkoutId || !amount) {
       return NextResponse.json(
         { error: "Missing required fields: checkoutId, amount" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -53,7 +100,6 @@ export async function POST(request: NextRequest) {
     if (!apiUrl) {
       throw new Error("NEXT_PUBLIC_API_URL is not configured");
     }
-
 
     // Get auth token from request cookies
     const token = request.cookies.get("token")?.value;
@@ -70,6 +116,11 @@ export async function POST(request: NextRequest) {
     // Generate idempotency key for safe retries
     const idempotencyKey = `paypal-${checkoutId}-${Date.now()}`;
 
+    const GETPAYMENTQUERY =
+      paymentMethodType === "paypal"
+        ? TRANSACTION_INITIALIZE
+        : TRANSACTION_INITIALIZE_CARD;
+
     // Get the storefront URL for return/cancel URLs
     const storefrontUrl =
       process.env.NEXT_PUBLIC_STOREFRONT_URL ||
@@ -77,20 +128,40 @@ export async function POST(request: NextRequest) {
       "http://localhost:3000";
 
     const requestBody = {
-      query: TRANSACTION_INITIALIZE,
+      query: GETPAYMENTQUERY,
       variables: {
         id: checkoutId,
         amount: amount.toString(),
-        // action: "CHARGE",  // REMOVED: This field requires HANDLE_PAYMENTS permission
         paymentGateway: {
           id: "saleor.app.payment.paypal",
-          data: {
-            // Pass return and cancel URLs to PayPal app
-            returnUrl: `${storefrontUrl}/checkout?checkoutId=${checkoutId}&payment=success`,
-            cancelUrl: `${storefrontUrl}/checkout?checkoutId=${checkoutId}&payment=cancelled`,
-          },
+          data: vaultId
+            ? // Flow 1: Paying with saved card (vaultId provided)
+              {
+                paymentMethodType: paymentMethodType,
+                idempotencyKey: generateIdempotencyKey(),
+                vaultId: vaultId,
+                saleorUserId: saleorUserId,
+              }
+            : // Flow 2: New card payment (with or without saving)
+              {
+                ...(paymentMethodType !== "paypal" && {
+                  paymentMethodType: paymentMethodType,
+                  idempotencyKey: generateIdempotencyKey(),
+                }),
+                returnUrl: `${storefrontUrl}/checkout?checkoutId=${checkoutId}&payment=success`,
+                cancelUrl: `${storefrontUrl}/checkout?checkoutId=${checkoutId}&payment=cancelled`,
+                ...(paymentMethodType === "paypal" && {
+                  paymentMethodType: paymentMethodType,
+                }),
+                ...(savePaymentMethod && {
+                  savePaymentMethod: true,
+                  saleorUserId: saleorUserId,
+                }),
+              },
         },
-        idempotencyKey,
+        ...(paymentMethodType === "paypal" && {
+          idempotencyKey,
+        }),
       },
     };
 
@@ -105,11 +176,12 @@ export async function POST(request: NextRequest) {
     // Always try to parse the response body to see GraphQL errors
     const result = await response.json();
 
+
     if (!response.ok) {
       console.error(
         "❌ GraphQL request failed:",
         response.status,
-        response.statusText
+        response.statusText,
       );
       console.error("❌ Response body:", result);
 
@@ -117,7 +189,7 @@ export async function POST(request: NextRequest) {
       const errorDetail =
         result.errors?.[0]?.message || result.error || response.statusText;
       throw new Error(
-        `GraphQL request failed: ${response.status} - ${errorDetail}`
+        `GraphQL request failed: ${response.status} - ${errorDetail}`,
       );
     }
 
@@ -142,13 +214,7 @@ export async function POST(request: NextRequest) {
     const transactionEvent = data?.transactionInitialize?.transactionEvent;
     const errors = data?.transactionInitialize?.errors;
 
-    console.log("📋 Transaction details:", {
-      transactionId,
-      eventType: transactionEvent?.type,
-      pspReference: transactionEvent?.pspReference,
-      responseData,
-      errors,
-    });
+    // Avoid noisy logs (and accidental sensitive output) in templates/production.
 
     // Check if the transaction failed
     if (
@@ -169,7 +235,7 @@ export async function POST(request: NextRequest) {
           responseData,
           errors,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -191,7 +257,7 @@ export async function POST(request: NextRequest) {
           responseData,
           transactionEvent,
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -211,7 +277,7 @@ export async function POST(request: NextRequest) {
       {
         error: error instanceof Error ? error.message : "Internal server error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

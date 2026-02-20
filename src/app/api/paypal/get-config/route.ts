@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createRemoteJWKSet, jwtVerify } from "jose";
 
 // Types for PayPal Gateway Configuration
 interface GatewayError {
@@ -18,6 +19,18 @@ interface PayPalData {
     advancedCardProcessing: boolean;
     vaulting: boolean;
   };
+  savedPaymentMethods: [
+    {
+      id: string;
+      type: string;
+      card: {
+        brand: string;
+        lastDigits: string;
+        expiry: string;
+      };
+    },
+  ];
+  userIdToken?: string;
 }
 
 interface GatewayConfig {
@@ -34,6 +47,26 @@ interface PaymentGatewayInitializeResponse {
     };
   };
   errors?: Array<{ message: string }>;
+}
+
+interface DecodedToken {
+  token: string;
+  user_id: string;
+}
+
+/**
+ * Verify JWT token using Saleor JWKS endpoint and extract the payload.
+ */
+async function verifyJWT(token: string, saleorBaseUrl: string): Promise<DecodedToken | null> {
+  try {
+    const jwksUrl = new URL("/.well-known/jwks.json", saleorBaseUrl);
+    const JWKS = createRemoteJWKSet(jwksUrl);
+    const { payload } = await jwtVerify(token, JWKS);
+    return payload as unknown as DecodedToken;
+  } catch (error) {
+    console.error("❌ JWT verification failed:", error);
+    return null;
+  }
 }
 
 /**
@@ -54,14 +87,14 @@ export async function POST(request: NextRequest) {
     if (!checkoutId) {
       return NextResponse.json(
         { error: "Missing checkoutId parameter" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!amount || amount <= 0) {
       return NextResponse.json(
         { error: "Invalid amount parameter" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -71,12 +104,27 @@ export async function POST(request: NextRequest) {
       console.error("❌ NEXT_PUBLIC_API_URL not configured");
       return NextResponse.json(
         { error: "Saleor API URL not configured" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     // Get auth token from cookies
     const token = request.cookies.get("token")?.value;
+
+    // Verify JWT and extract user_id
+    let saleorUserId = "";
+
+    if (token) {
+      const saleorBaseUrl = new URL(apiUrl).origin;
+      const verified = await verifyJWT(token, saleorBaseUrl);
+      if (verified?.user_id) {
+        saleorUserId = verified.user_id;
+      } else {
+        console.warn("⚠️ Could not verify token or extract user_id");
+      }
+    } else {
+      console.warn("⚠️ No authentication token found");
+    }
 
     // GraphQL mutation to initialize payment gateway
     const PAYMENT_GATEWAY_INITIALIZE = `
@@ -130,6 +178,9 @@ export async function POST(request: NextRequest) {
           paymentGateways: [
             {
               id: "saleor.app.payment.paypal",
+              data: {
+                saleorUserId: saleorUserId, // Pass the decoded user_id here
+              },
             },
           ],
         },
@@ -140,7 +191,7 @@ export async function POST(request: NextRequest) {
       console.error("❌ Saleor API request failed:", response.status);
       return NextResponse.json(
         { error: "Failed to fetch payment gateway configuration" },
-        { status: response.status }
+        { status: response.status },
       );
     }
     
@@ -151,7 +202,7 @@ export async function POST(request: NextRequest) {
       console.error("❌ GraphQL errors:", data.errors);
       return NextResponse.json(
         { error: "GraphQL error", details: data.errors },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -164,20 +215,20 @@ export async function POST(request: NextRequest) {
       console.error("❌ Payment gateway initialization errors:", errors);
       return NextResponse.json(
         { error: "Failed to initialize payment gateway", details: errors },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Find PayPal configuration
     const paypalConfig = gatewayConfigs?.find(
-      (config) => config.id === "saleor.app.payment.paypal"
+      (config) => config.id === "saleor.app.payment.paypal",
     );
 
     if (!paypalConfig) {
       console.error("❌ PayPal configuration not found in response");
       return NextResponse.json(
         { error: "PayPal payment gateway not available" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -186,7 +237,7 @@ export async function POST(request: NextRequest) {
       console.error("❌ PayPal config errors:", paypalConfig.errors);
       return NextResponse.json(
         { error: "PayPal configuration error", details: paypalConfig.errors },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -197,13 +248,14 @@ export async function POST(request: NextRequest) {
       console.error("❌ PayPal data is null or undefined");
       return NextResponse.json(
         { error: "PayPal configuration data not available" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     // Use the partner client ID (pk/paypalClientId) for the SDK
     // This is critical for multi-party payments (Google Pay, Apple Pay)
     const clientId = paypalData.paypalClientId;
+    const merchantClientId = paypalData.merchantClientId;
     const merchantId = paypalData.merchantId;
     const paymentMethodReadiness = paypalData.paymentMethodReadiness;
 
@@ -211,7 +263,7 @@ export async function POST(request: NextRequest) {
       console.error("❌ PayPal client ID not found in configuration");
       return NextResponse.json(
         { error: "PayPal client ID not configured in the payment app" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -219,6 +271,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       clientId,
       merchantId,
+      merchantClientId,
       paymentMethodReadiness: paymentMethodReadiness || {
         applePay: false,
         googlePay: false,
@@ -226,6 +279,8 @@ export async function POST(request: NextRequest) {
         advancedCardProcessing: false,
         vaulting: false,
       },
+      savedPaymentMethods: paypalData.savedPaymentMethods || [],
+      userIdToken: paypalData.userIdToken || null,
     });
   } catch (error) {
     console.error("❌ Error fetching PayPal config:", error);
@@ -234,7 +289,7 @@ export async function POST(request: NextRequest) {
         error: "Internal server error",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

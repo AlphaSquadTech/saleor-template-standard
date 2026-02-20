@@ -156,7 +156,7 @@ export async function POST(request: NextRequest) {
 
     // If no order exists yet, try to complete the checkout manually
     if (!order) {
-      console.log("⚠️ Order not created by transactionProcess, attempting checkoutComplete...");
+      // Avoid noisy logs in templates/production.
 
       // Try to complete the checkout manually
       const completeResponse = await fetch(apiUrl, {
@@ -201,7 +201,7 @@ export async function POST(request: NextRequest) {
         );
 
         if (isDuplicateError) {
-          console.log("⚠️ Duplicate key error - order may already exist, checking transaction again...");
+          // Avoid noisy logs in templates/production.
 
           // Re-fetch transaction to get the order that was created
           const recheckResponse = await fetch(apiUrl, {
@@ -223,7 +223,6 @@ export async function POST(request: NextRequest) {
             const recheckOrder = recheckResult.data?.transactionProcess?.transaction?.order;
 
             if (recheckOrder) {
-              console.log("✅ Order found on recheck:", recheckOrder.id);
               order = recheckOrder;
             }
           }
@@ -277,14 +276,10 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      console.log("✅ Order created via checkoutComplete:", order.id);
+      // Avoid noisy logs in templates/production.
     }
 
-    console.log("✅ Payment captured and order created:", {
-      orderId: order.id,
-      orderNumber: order.number,
-      total: order.total.gross.amount,
-    });
+    // Avoid noisy logs in templates/production.
 
     return NextResponse.json({
       success: true,

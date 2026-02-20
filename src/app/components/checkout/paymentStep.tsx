@@ -2,6 +2,7 @@
 import { useState, useCallback } from 'react';
 import { PaymentProcessingState, KountConfigResponse } from '@/graphql/types/checkout';
 import { SaleorNativePayment } from './saleorNativePayment';
+import { ProductInquiryIcon } from '@/app/utils/svgs/productInquiryIcon';
 
 interface PaymentGateway {
   id: string;
@@ -120,16 +121,14 @@ export default function PaymentStep({
       {toast && <div className={`mb-4 p-3 rounded-md ${toast.type === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>{toast.message}</div>}
 
       {disabled && (
-        <div className="text-xs font-secondary text-[var(--color-secondary-600)] items-center bg-[var(--color-secondary-100)] border border-[var(--color-secondary-200)] p-2 mb-4 flex  gap-2">
+        <div className="text-xs font-secondary text-white items-center bg-[var(--color-secondary-100)] border border-[var(--color-secondary-200)] p-2 mb-4 flex  gap-2">
           {isCalculatingTotal ? (
-            <svg className="w-5 h-5 text-[var(--color-secondary-600)] mt-0.5 flex-shrink-0 animate-spin" fill="none" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-white mt-0.5 flex-shrink-0 animate-spin" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
           ) : (
-            <svg className="w-5 h-5 text-[var(--color-secondary-600)] mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-            </svg>
+            ProductInquiryIcon
           )}
           <p>
             {isCalculatingTotal
@@ -178,3 +177,4 @@ export default function PaymentStep({
     </div>
   );
 }
+``
