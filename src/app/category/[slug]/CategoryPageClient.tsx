@@ -141,7 +141,7 @@ export default function CategoryPageClient(props: { slug: string }) {
                   name={item.name}
                   image={item.primary_image || "/no-image-avail-large.png"}
                   href={`/product/${item.slug}`}
-                  price={item.price_min || 0}
+                  price={item.default_variant_price || 0}
                   category_id={item.category_id || ""}
                   category={item.category_name || ""}
                   discount={

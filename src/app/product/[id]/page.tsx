@@ -53,6 +53,7 @@ import {
 import ItemInquiryModal from "./components/itemInquiryModal";
 import { SwiperArrowIconLeft } from "@/app/utils/svgs/swiperArrowIconLeft";
 import { SwiperArrowIconRight } from "@/app/utils/svgs/swiperArrowIconRight";
+import { shopApi, type PLOptionSet } from "@/lib/api/shop";
 /* ---------------- helpers (local) ---------------- */
 type AddressInputTS = {
   firstName: string;
@@ -66,62 +67,6 @@ type AddressInputTS = {
 };
 
 type CheckoutLineInputTS = { variantId: string; quantity: number };
-
-// Option Sets Types
-interface VariantOptionMetadata {
-  name: string;
-  label: string;
-  hidden: boolean;
-  type: "enum" | "multi-enum";
-  deselect: string;
-  required: boolean;
-  base_product_required?: boolean;
-}
-
-interface ProductOptionMetadata {
-  name: string;
-  label: string;
-  hidden: boolean;
-  type: "text" | "date" | "datetime";
-  required: boolean;
-}
-
-interface OptionSet {
-  name: string;
-  label: string;
-  hidden: boolean;
-  type: "enum" | "multi-enum";
-  deselect: string;
-  required: boolean;
-  variants: ProductVariant[];
-}
-
-// Helper to parse variant option metadata
-function parseVariantOptionMetadata(
-  variant: ProductVariant
-): VariantOptionMetadata | null {
-  const optionsMeta = variant.metadata?.find((m) => m.key === "option_set");
-  if (!optionsMeta?.value) return null;
-  try {
-    return JSON.parse(optionsMeta.value) as VariantOptionMetadata;
-  } catch {
-    return null;
-  }
-}
-
-// Helper to parse product-level options metadata
-function parseProductOptionsMetadata(
-  metadata: Array<{ key: string; value: string }>
-): ProductOptionMetadata[] {
-  const optionsMeta = metadata?.find((m) => m.key === "options");
-  if (!optionsMeta?.value) return [];
-  try {
-    const parsed = JSON.parse(optionsMeta.value);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
 
 function resolveEndpoint() {
   const raw = process.env.NEXT_PUBLIC_API_URL || "/api/graphql";
@@ -484,6 +429,8 @@ export default function ProductDetailPage() {
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Option Sets State
+  const [plOptionSets, setPlOptionSets] = useState<PLOptionSet[]>([]);
+  const [optionsLoading, setOptionsLoading] = useState(true);
   const [optionSetSelections, setOptionSetSelections] = useState<
     Record<string, string[]>
   >({});
@@ -492,135 +439,127 @@ export default function ProductDetailPage() {
     Record<string, string>
   >({});
 
-  // Process SKU-based option sets from variant metadata
-  const optionSets = useMemo<OptionSet[]>(() => {
-    if (!product?.variants) return [];
+  // Fetch option sets from PL API
+  useEffect(() => {
+    if (!product?.id) return;
+    setOptionsLoading(true);
+    shopApi
+      .getProductOptionSets(product.id)
+      .then((res) => setPlOptionSets(res.data ?? []))
+      .catch(() => setPlOptionSets([]))
+      .finally(() => setOptionsLoading(false));
+  }, [product?.id]);
 
-    const setsMap = new Map<string, OptionSet>();
+  // Variant-scoped option sets (enum / multi-enum) — have `variants` array
+  const variantOptionSets = useMemo(
+    () =>
+      plOptionSets.filter(
+        (os) => os.type === "enum" || os.type === "multi-enum",
+      ),
+    [plOptionSets],
+  );
 
-    for (const variant of product.variants) {
-      const optionMeta = parseVariantOptionMetadata(variant);
-      if (!optionMeta || !optionMeta.name) continue;
+  // Product-scoped option sets (text / date / date-time / image) — no `variants`
+  const productOptionSets = useMemo(
+    () =>
+      plOptionSets.filter(
+        (os) =>
+          os.type === "text" ||
+          os.type === "date" ||
+          os.type === "date-time" ||
+          os.type === "image",
+      ),
+    [plOptionSets],
+  );
 
-      const existing = setsMap.get(optionMeta.name);
-      if (existing) {
-        existing.variants.push(variant);
-      } else {
-        setsMap.set(optionMeta.name, {
-          name: optionMeta.name,
-          label: optionMeta.label,
-          hidden: optionMeta.hidden,
-          type: optionMeta.type,
-          deselect: optionMeta.deselect,
-          required: optionMeta.required,
-          variants: [variant],
-        });
+  // Set of variant IDs that belong to option sets
+  const optionSetVariantIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const os of variantOptionSets) {
+      for (const v of os.variants ?? []) {
+        ids.add(v.product_variant_id);
       }
     }
-
-    return Array.from(setsMap.values());
-  }, [product?.variants]);
-
-  // Process Non-SKU options from product metadata
-  const nonSkuOptions = useMemo<ProductOptionMetadata[]>(() => {
-    if (!product?.metadata) return [];
-    return parseProductOptionsMetadata(product.metadata);
-  }, [product?.metadata]);
-
-  // Visible option sets (filter out hidden ones)
-  const visibleOptionSets = useMemo(
-    () => optionSets.filter((os) => !os.hidden),
-    [optionSets]
-  );
-
-  // Visible non-SKU options
-  const visibleNonSkuOptions = useMemo(
-    () => nonSkuOptions.filter((opt) => !opt.hidden),
-    [nonSkuOptions]
-  );
+    return ids;
+  }, [variantOptionSets]);
 
   // Get variants that are NOT part of any option set (for regular variant selection)
-  const regularVariants = useMemo(() => {
-    if (!product?.variants) return [];
-    const optionSetVariantIds = new Set(
-      optionSets.flatMap((os) => os.variants.map((v) => v.id))
-    );
-    return product.variants.filter((v) => !optionSetVariantIds.has(v.id));
-  }, [product?.variants, optionSets]);
+  const regularVariants = useMemo(
+    () =>
+      product?.variants?.filter((v) => !optionSetVariantIds.has(v.id)) ?? [],
+    [product?.variants, optionSetVariantIds],
+  );
 
-  // Get the base variant (the one without option_set metadata) for default selection
+  // Get the base variant (not part of any option set) for default selection
   const baseVariant = useMemo(() => {
     if (!product?.variants?.length) return null;
-    // Find the first variant that doesn't have option_set metadata
-    const variantWithoutOptionSet = product.variants.find(
-      (v) => !parseVariantOptionMetadata(v)
+    return (
+      product.variants.find((v) => !optionSetVariantIds.has(v.id)) ??
+      product.variants[0]
     );
-    // Fall back to first variant if all have option_set (shouldn't happen, but safety)
-    return variantWithoutOptionSet ?? product.variants[0];
-  }, [product?.variants]);
+  }, [product?.variants, optionSetVariantIds]);
 
   // Validation function
   const validateOptionsAndInputs = useCallback((): boolean => {
     const errors: Record<string, string> = {};
 
-    // Validate required option sets
-    for (const optionSet of visibleOptionSets) {
-      if (optionSet.required) {
-        const selections = optionSetSelections[optionSet.name] || [];
+    // Validate required variant-scoped option sets
+    for (const os of variantOptionSets) {
+      if (os.required) {
+        const selections = optionSetSelections[String(os.id)] || [];
         if (selections.length === 0) {
-          errors[`optionSet_${optionSet.name}`] = `${optionSet.label} is required`;
+          errors[`optionSet_${os.id}`] = `${os.label} is required`;
         }
       }
     }
 
-    // Validate required non-SKU inputs
-    for (const option of visibleNonSkuOptions) {
-      if (option.required) {
-        const value = nonSkuInputs[option.name] || "";
+    // Validate required product-scoped option sets
+    for (const os of productOptionSets) {
+      if (os.required) {
+        const value = nonSkuInputs[String(os.id)] || "";
         if (!value.trim()) {
-          errors[`nonSku_${option.name}`] = `${option.label} is required`;
+          errors[`nonSku_${os.id}`] = `${os.label} is required`;
         }
       }
     }
 
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
-  }, [visibleOptionSets, visibleNonSkuOptions, optionSetSelections, nonSkuInputs]);
+  }, [variantOptionSets, productOptionSets, optionSetSelections, nonSkuInputs]);
 
   // Handle option set selection
   const handleOptionSetChange = useCallback(
-    (optionSetName: string, variantId: string, isMulti: boolean) => {
+    (optionSetId: string, variantId: string, isMulti: boolean) => {
       setOptionSetSelections((prev) => {
         if (isMulti) {
-          const current = prev[optionSetName] || [];
+          const current = prev[optionSetId] || [];
           if (current.includes(variantId)) {
             return {
               ...prev,
-              [optionSetName]: current.filter((id) => id !== variantId),
+              [optionSetId]: current.filter((id) => id !== variantId),
             };
           } else {
             return {
               ...prev,
-              [optionSetName]: [...current, variantId],
+              [optionSetId]: [...current, variantId],
             };
           }
         } else {
-          // For single select (enum), if selecting empty string (deselect), remove selection
           if (variantId === "") {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { [optionSetName]: _removed, ...rest } = prev;
+            const { [optionSetId]: _removed, ...rest } = prev;
             return rest;
           }
           return {
             ...prev,
-            [optionSetName]: [variantId],
+            [optionSetId]: [variantId],
           };
         }
       });
       // Clear validation error for this option set
       setValidationErrors((prev) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { [`optionSet_${optionSetName}`]: _removed, ...rest } = prev;
+        const { [`optionSet_${optionSetId}`]: _removed, ...rest } = prev;
         return rest;
       });
     },
@@ -629,47 +568,22 @@ export default function ProductDetailPage() {
 
   // Handle non-SKU input change
   const handleNonSkuInputChange = useCallback(
-    (optionName: string, value: string) => {
+    (optionSetId: string, value: string) => {
       setNonSkuInputs((prev) => ({
         ...prev,
-        [optionName]: value,
+        [optionSetId]: value,
       }));
       // Clear validation error for this input
       setValidationErrors((prev) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { [`nonSku_${optionName}`]: _removed, ...rest } = prev;
+        const { [`nonSku_${optionSetId}`]: _removed, ...rest } = prev;
         return rest;
       });
     },
     []
   );
 
-  // Resolve a variant ID to a URL-safe identifier (prefer SKU, fall back to name)
-  // No manual encoding -- URLSearchParams handles spaces/special chars natively
-  const variantToURLValue = useCallback(
-    (variantId: string): string | null => {
-      for (const os of optionSets) {
-        const variant = os.variants.find((v) => v.id === variantId);
-        if (variant) {
-          return variant.sku || variant.name || null;
-        }
-      }
-      return null;
-    },
-    [optionSets]
-  );
-
-  // Resolve a URL value back to a variant ID (direct match on SKU or name)
-  const urlValueToVariantId = useCallback(
-    (value: string, optionSet: OptionSet): string | undefined => {
-      return optionSet.variants.find(
-        (v) => v.sku === value || v.name === value
-      )?.id;
-    },
-    []
-  );
-
-  // Function to update URL with SKU, option set, and custom input params
+  // Function to update URL with SKU param
   const updateURL = useCallback(
     (
       sku: string | null,
@@ -683,32 +597,25 @@ export default function ProductDetailPage() {
         params.set("sku", sku.replace(/\s+/g, "-"));
       }
 
-      // Set option set params (os_<name>=value1,value2)
-      for (const [optionSetName, variantIds] of Object.entries(
-        optionSelections
-      )) {
-        if (variantIds.length === 0) continue;
-        const values = variantIds
-          .map((id) => variantToURLValue(id))
-          .filter(Boolean);
-        if (values.length > 0) {
-          params.set(`os_${optionSetName}`, values.join(","));
-        }
-      }
+      // Option set params disabled — only default variant SKU tracked in URL
+      // for (const [optionSetId, variantIds] of Object.entries(optionSelections)) {
+      //   if (variantIds.length === 0) continue;
+      //   params.set(`os_${optionSetId}`, variantIds.join(","));
+      // }
 
-      // Set custom input params (ci_<name>=value)
-      for (const [inputName, value] of Object.entries(customInputs)) {
-        if (value) {
-          params.set(`ci_${inputName}`, value);
-        }
-      }
+      // Custom input params disabled
+      // for (const [optionSetId, value] of Object.entries(customInputs)) {
+      //   if (value) {
+      //     params.set(`ci_${optionSetId}`, value);
+      //   }
+      // }
 
       const query = params.toString();
       router.replace(query ? `${pathname}?${query}` : pathname, {
         scroll: false,
       });
     },
-    [pathname, router, variantToURLValue]
+    [pathname, router]
   );
 
   // Toast with unmount cleanup
@@ -786,17 +693,14 @@ export default function ProductDetailPage() {
     }
 
     // Restore option set selections from URL
-    if (optionSets.length > 0) {
+    if (variantOptionSets.length > 0) {
       const restoredSelections: Record<string, string[]> = {};
-      for (const os of optionSets) {
-        const paramValue = searchParams.get(`os_${os.name}`);
+      for (const os of variantOptionSets) {
+        const paramValue = searchParams.get(`os_${os.id}`);
         if (!paramValue) continue;
-        const values = paramValue.split(",");
-        const variantIds = values
-          .map((val) => urlValueToVariantId(val, os))
-          .filter(Boolean) as string[];
+        const variantIds = paramValue.split(",").filter(Boolean);
         if (variantIds.length > 0) {
-          restoredSelections[os.name] = variantIds;
+          restoredSelections[String(os.id)] = variantIds;
         }
       }
       if (Object.keys(restoredSelections).length > 0) {
@@ -805,12 +709,12 @@ export default function ProductDetailPage() {
     }
 
     // Restore non-SKU custom inputs from URL
-    if (nonSkuOptions.length > 0) {
+    if (productOptionSets.length > 0) {
       const restoredInputs: Record<string, string> = {};
-      for (const opt of nonSkuOptions) {
-        const paramValue = searchParams.get(`ci_${opt.name}`);
+      for (const os of productOptionSets) {
+        const paramValue = searchParams.get(`ci_${os.id}`);
         if (paramValue) {
-          restoredInputs[opt.name] = paramValue;
+          restoredInputs[String(os.id)] = paramValue;
         }
       }
       if (Object.keys(restoredInputs).length > 0) {
@@ -819,7 +723,7 @@ export default function ProductDetailPage() {
     }
 
     setIsInitialized(true);
-  }, [product?.variants, searchParams, isInitialized, baseVariant, optionSets, nonSkuOptions, urlValueToVariantId]);
+  }, [product?.variants, searchParams, isInitialized, baseVariant, variantOptionSets, productOptionSets]);
 
   const selectedVariant = useMemo(() => {
     if (!product?.variants?.length) return null;
@@ -830,43 +734,43 @@ export default function ProductDetailPage() {
     );
   }, [product, selectedVariantId, baseVariant]);
 
-  // Update URL with SKU, option set selections, and custom inputs when they change (after initialization)
+  // Update URL with default variant SKU when initialized
   useEffect(() => {
     if (isInitialized) {
-      updateURL(selectedVariant?.sku ?? null, optionSetSelections, nonSkuInputs);
+      updateURL(product?.defaultVariant?.sku ?? null, optionSetSelections, nonSkuInputs);
     }
-  }, [isInitialized, selectedVariant?.sku, optionSetSelections, nonSkuInputs, updateURL]);
+  }, [isInitialized, product?.defaultVariant?.sku, optionSetSelections, nonSkuInputs, updateURL]);
 
-  // ---------- PRICING (variant-first) ----------
-  const variantPrice = selectedVariant?.pricing?.price?.gross ?? null;
-  const variantOriginal =
-    selectedVariant?.pricing?.priceUndiscounted?.gross ?? null;
+  // ---------- PRICING (defaultVariant as base, then option set variants update it) ----------
+  const defaultVariantPrice = product?.defaultVariant?.pricing?.price?.gross ?? null;
+  const defaultVariantOriginal = product?.defaultVariant?.pricing?.priceUndiscounted?.gross ?? null;
 
+  // Base price comes from defaultVariant, fallback to selected variant or product price range
   const rawCurrentPrice =
-    variantPrice?.amount ??
+    defaultVariantPrice?.amount ??
+    selectedVariant?.pricing?.price?.gross?.amount ??
     product?.pricing?.priceRange?.start?.gross?.amount ??
     0;
 
   const currency =
-    variantPrice?.currency ??
-    variantOriginal?.currency ??
+    defaultVariantPrice?.currency ??
+    defaultVariantOriginal?.currency ??
     product?.pricing?.priceRange?.start?.gross?.currency ??
     "USD";
 
-  // ✅ Calculate original price correctly: discounted price + discount amount
+  // Calculate original price correctly: discounted price + discount amount
   const discountAmount = product?.pricing?.discount?.gross?.amount ?? 0;
   const rawOriginalPrice =
     discountAmount > 0
-      ? rawCurrentPrice + discountAmount // Original = Current + Discount
-      : variantOriginal?.amount ??
+      ? rawCurrentPrice + discountAmount
+      : defaultVariantOriginal?.amount ??
+        selectedVariant?.pricing?.priceUndiscounted?.gross?.amount ??
         product?.pricing?.priceRange?.stop?.gross?.amount ??
         null;
 
-  // Format prices properly (convert from cents if needed)
   const currentPrice = rawCurrentPrice;
   const originalPrice = rawOriginalPrice;
 
-  // ✅ Use Saleor's discount info for more accurate detection
   const hasDiscount =
     discountAmount > 0 ||
     (typeof originalPrice === "number" && originalPrice > currentPrice);
@@ -881,38 +785,83 @@ export default function ProductDetailPage() {
   // Calculate total price including selected option set variants
   const optionSetsTotalPrice = useMemo(() => {
     let total = 0;
-    for (const optionSet of optionSets) {
-      const selectedIds = optionSetSelections[optionSet.name] || [];
+    for (const os of variantOptionSets) {
+      const selectedIds = optionSetSelections[String(os.id)] || [];
       for (const variantId of selectedIds) {
-        const variant = optionSet.variants.find((v) => v.id === variantId);
-        if (variant) {
-          total += variant.pricing?.price?.gross?.amount ?? 0;
+        const saleorVariant = product?.variants?.find((v) => v.id === variantId);
+        if (saleorVariant) {
+          total += saleorVariant.pricing?.price?.gross?.amount ?? 0;
         }
       }
     }
     return total;
-  }, [optionSets, optionSetSelections]);
+  }, [variantOptionSets, optionSetSelections, product?.variants]);
 
-  // Check if any selected option has base_product_required=false
-  const shouldIncludeBaseProductInPrice = useMemo(() => {
-    for (const optionSet of optionSets) {
-      const selectedIds = optionSetSelections[optionSet.name] || [];
+  // Check if any selected option set variant has base_variant_required=false
+  const shouldIncludeDefaultVariant = useMemo(() => {
+    for (const os of variantOptionSets) {
+      const selectedIds = optionSetSelections[String(os.id)] || [];
       for (const variantId of selectedIds) {
-        const variant = optionSet.variants.find((v) => v.id === variantId);
-        if (variant) {
-          const optionMeta = parseVariantOptionMetadata(variant);
-          if (optionMeta?.base_product_required === false) {
-            return false;
-          }
+        const plVariant = os.variants?.find(
+          (v) => v.product_variant_id === variantId,
+        );
+        if (plVariant?.base_variant_required === false) {
+          return false;
         }
       }
     }
     return true;
-  }, [optionSets, optionSetSelections]);
+  }, [variantOptionSets, optionSetSelections]);
 
-  // Total display price (base + options, excluding base if base_product_required=false)
-  const displayPrice = (shouldIncludeBaseProductInPrice ? currentPrice : 0) + optionSetsTotalPrice;
-  const displayCompareAt = compareAt !== null ? (shouldIncludeBaseProductInPrice ? compareAt : 0) + optionSetsTotalPrice : null;
+  // Display price: default variant price + selected option prices (conditional on base_variant_required)
+  const displayPrice =
+    (shouldIncludeDefaultVariant ? currentPrice : 0) + optionSetsTotalPrice;
+  const displayCompareAt =
+    compareAt !== null && shouldIncludeDefaultVariant
+      ? compareAt + optionSetsTotalPrice
+      : null;
+
+  // Stock validation for default variant and selected option set variants
+  const { isOutOfStock, outOfStockMessage } = useMemo(() => {
+    // Check default variant stock if it's included
+    if (shouldIncludeDefaultVariant && product?.defaultVariant) {
+      const qty = product.defaultVariant.quantityAvailable;
+      if (typeof qty === "number" && qty <= 0) {
+        return {
+          isOutOfStock: true,
+          outOfStockMessage: `${product.name} is out of stock`,
+        };
+      }
+    }
+
+    // Check selected option set variants stock
+    for (const os of variantOptionSets) {
+      const selectedIds = optionSetSelections[String(os.id)] || [];
+      for (const variantId of selectedIds) {
+        const saleorVariant = product?.variants?.find(
+          (v) => v.id === variantId,
+        );
+        if (saleorVariant) {
+          const qty = saleorVariant.quantityAvailable;
+          if (typeof qty === "number" && qty <= 0) {
+            return {
+              isOutOfStock: true,
+              outOfStockMessage: `${saleorVariant.name} is out of stock`,
+            };
+          }
+        }
+      }
+    }
+
+    return { isOutOfStock: false, outOfStockMessage: "" };
+  }, [
+    shouldIncludeDefaultVariant,
+    product?.defaultVariant,
+    product?.variants,
+    product?.name,
+    variantOptionSets,
+    optionSetSelections,
+  ]);
   // --------------------------------------------
 
   // Effect to update schema.org structured data when variant changes
@@ -1029,6 +978,12 @@ export default function ProductDetailPage() {
   const handleAddToCart = async () => {
     if (!product) return;
 
+    // Stock validation
+    if (isOutOfStock) {
+      showToast("Out of Stock", outOfStockMessage, "error");
+      return;
+    }
+
     // Validate option sets and non-SKU inputs
     if (!validateOptionsAndInputs()) {
       showToast(
@@ -1044,60 +999,43 @@ export default function ProductDetailPage() {
 
       // Collect all selected option set variants as CartItemOptions
       const selectedOptions: CartItemOption[] = [];
-      let shouldIncludeBaseProduct = true;
 
-      for (const optionSet of optionSets) {
-        const selections = optionSetSelections[optionSet.name] || [];
+      for (const os of variantOptionSets) {
+        const selections = optionSetSelections[String(os.id)] || [];
         for (const variantId of selections) {
-          const variant = optionSet.variants.find((v) => v.id === variantId);
-          if (variant) {
-            const optionMeta = parseVariantOptionMetadata(variant);
+          const plVariant = os.variants?.find((v) => v.product_variant_id === variantId);
+          const saleorVariant = product?.variants?.find((v) => v.id === variantId);
 
-            // Check if any variant has base_product_required=false
-            if (optionMeta?.base_product_required === false) {
-              shouldIncludeBaseProduct = false;
-            }
-
-            // Add to selected options
-            selectedOptions.push({
-              variantId: variant.id,
-              name: variant.name,
-              price: variant.pricing?.price?.gross?.amount ?? 0,
-              optionSetName: optionSet.name,
-              optionSetLabel: optionSet.label,
-            });
-          }
+          selectedOptions.push({
+            variantId,
+            name: plVariant?.product_variant_name ?? saleorVariant?.name ?? "",
+            price: saleorVariant?.pricing?.price?.gross?.amount ?? 0,
+            optionSetName: os.name,
+            optionSetLabel: os.label,
+          });
         }
-      }
-
-      // If we don't include base product, we need at least one option selected
-      if (!shouldIncludeBaseProduct && selectedOptions.length === 0) {
-        showToast(
-          "Please select an option",
-          "At least one option must be selected.",
-          "error"
-        );
-        return;
       }
 
       // Create a single consolidated cart item
       const cartItem = {
-        id: selectedVariant?.id ?? baseVariant?.id ?? product.id,
+        id: shouldIncludeDefaultVariant
+          ? (product?.defaultVariant?.id ?? baseVariant?.id ?? selectedVariant?.id ?? product.id)
+          : (selectedVariant?.id ?? product.id),
         name: product.name,
-        price: shouldIncludeBaseProduct ? currentPrice : 0,
+        price: shouldIncludeDefaultVariant ? currentPrice : 0,
         image: images[0]?.url ?? "",
         category: product?.category?.name ?? "N/A",
         quantity,
         selectedOptions: selectedOptions.length > 0 ? selectedOptions : undefined,
         customInputs: Object.keys(nonSkuInputs).length > 0 ? nonSkuInputs : undefined,
-        skipBaseProduct: !shouldIncludeBaseProduct,
+        skipBaseProduct: !shouldIncludeDefaultVariant,
       };
 
       // Add consolidated item to cart (store handles adding all variants to Saleor)
       await addToCart(cartItem);
 
-      // If there are non-SKU options, update checkout line metadata
-      if (visibleNonSkuOptions.length > 0 && Object.keys(nonSkuInputs).length > 0) {
+      // If there are product-scoped options, update checkout line metadata
+      if (productOptionSets.length > 0 && Object.keys(nonSkuInputs).length > 0) {
         const state = useGlobalStore.getState();
         const checkoutId = state.checkoutId;
 
@@ -1138,7 +1076,10 @@ export default function ProductDetailPage() {
               if (targetLine) {
                 const metadata: MetadataInput[] = Object.entries(nonSkuInputs)
                   .filter(([, value]) => value.trim())
-                  .map(([key, value]) => ({ key, value }));
+                  .map(([osId, value]) => {
+                    const os = productOptionSets.find((o) => String(o.id) === osId);
+                    return { key: os?.name ?? osId, value };
+                  });
 
                 await updateCheckoutLineMetadata(targetLine.id, metadata);
               }
@@ -1220,6 +1161,12 @@ export default function ProductDetailPage() {
       return;
     }
 
+    // Stock validation
+    if (isOutOfStock) {
+      showToast("Out of Stock", outOfStockMessage, "error");
+      return;
+    }
+
     // Validate option sets and non-SKU inputs
     if (!validateOptionsAndInputs()) {
       showToast(
@@ -1232,41 +1179,24 @@ export default function ProductDetailPage() {
 
     // Collect all selected option set variants as CartItemOptions
     const selectedOptions: CartItemOption[] = [];
-    let shouldIncludeBaseProduct = true;
 
-    for (const optionSet of optionSets) {
-      const selections = optionSetSelections[optionSet.name] || [];
+    for (const os of variantOptionSets) {
+      const selections = optionSetSelections[String(os.id)] || [];
       for (const variantId of selections) {
-        const variant = optionSet.variants.find((v) => v.id === variantId);
-        if (variant) {
-          const optionMeta = parseVariantOptionMetadata(variant);
+        const plVariant = os.variants?.find((v) => v.product_variant_id === variantId);
+        const saleorVariant = product?.variants?.find((v) => v.id === variantId);
 
-          if (optionMeta?.base_product_required === false) {
-            shouldIncludeBaseProduct = false;
-          }
-
-          selectedOptions.push({
-            variantId: variant.id,
-            name: variant.name,
-            price: variant.pricing?.price?.gross?.amount ?? 0,
-            optionSetName: optionSet.name,
-            optionSetLabel: optionSet.label,
-          });
-        }
+        selectedOptions.push({
+          variantId,
+          name: plVariant?.product_variant_name ?? saleorVariant?.name ?? "",
+          price: saleorVariant?.pricing?.price?.gross?.amount ?? 0,
+          optionSetName: os.name,
+          optionSetLabel: os.label,
+        });
       }
     }
 
-    // Validate that we have something to buy
-    if (!shouldIncludeBaseProduct && selectedOptions.length === 0) {
-      showToast(
-        "Please select an option",
-        "Please select at least one option before buying.",
-        "error"
-      );
-      return;
-    }
-
-    if (shouldIncludeBaseProduct && !selectedVariant?.id) {
+    if (!selectedVariant?.id) {
       showToast(
         "Please select a variant",
         "Please select a variant before buying.",
@@ -1287,18 +1217,22 @@ export default function ProductDetailPage() {
     try {
       setBuying(true);
 
-      // Create consolidated cart item
-      const baseVariantIdForCart = selectedVariant?.id ?? baseVariant?.id ?? product.id;
+      // Use defaultVariant as the base for cart, falling back to baseVariant or selectedVariant
+      const baseVariantIdForCart = shouldIncludeDefaultVariant
+        ? (product.defaultVariant?.id ?? baseVariant?.id ?? selectedVariant?.id ?? product.id)
+        : (selectedVariant?.id ?? product.id);
+
+      // Create consolidated cart item (conditional on base_variant_required)
       const cartItem = {
         id: baseVariantIdForCart,
         name: product.name,
-        price: shouldIncludeBaseProduct ? currentPrice : 0,
+        price: shouldIncludeDefaultVariant ? currentPrice : 0,
         image: images[0]?.url ?? "",
         category: product?.category?.name ?? "N/A",
         quantity,
         selectedOptions: selectedOptions.length > 0 ? selectedOptions : undefined,
         customInputs: Object.keys(nonSkuInputs).length > 0 ? nonSkuInputs : undefined,
-        skipBaseProduct: !shouldIncludeBaseProduct,
+        skipBaseProduct: !shouldIncludeDefaultVariant,
       };
 
       // Add consolidated item to cart
@@ -1314,10 +1248,9 @@ export default function ProductDetailPage() {
         setTok?.(null);
       } catch {}
 
-      // Build lines for checkout (base + options)
+      // Build lines for checkout: default variant + only the selected option variants
       const lines: CheckoutLineInputTS[] = [];
-      // Only add base product if shouldIncludeBaseProduct is true
-      if (shouldIncludeBaseProduct) {
+      if (shouldIncludeDefaultVariant) {
         lines.push({ variantId: baseVariantIdForCart, quantity });
       }
       for (const opt of selectedOptions) {
@@ -1337,8 +1270,8 @@ export default function ProductDetailPage() {
         lines,
       });
 
-      // If there are non-SKU options, update checkout line metadata
-      if (visibleNonSkuOptions.length > 0 && Object.keys(nonSkuInputs).length > 0) {
+      // If there are product-scoped options, update checkout line metadata
+      if (productOptionSets.length > 0 && Object.keys(nonSkuInputs).length > 0) {
         try {
           const token = localStorage.getItem("token");
           const checkoutRes = await fetch(resolveEndpoint(), {
@@ -1374,7 +1307,10 @@ export default function ProductDetailPage() {
             if (targetLine) {
               const metadata: MetadataInput[] = Object.entries(nonSkuInputs)
                 .filter(([, value]) => value.trim())
-                .map(([key, value]) => ({ key, value }));
+                .map(([osId, value]) => {
+                  const os = productOptionSets.find((o) => String(o.id) === osId);
+                  return { key: os?.name ?? osId, value };
+                });
 
               await updateCheckoutLineMetadata(targetLine.id, metadata);
             }
@@ -1424,11 +1360,14 @@ export default function ProductDetailPage() {
     router,
     showToast,
     validateOptionsAndInputs,
-    optionSets,
+    variantOptionSets,
     optionSetSelections,
-    visibleNonSkuOptions,
+    productOptionSets,
     nonSkuInputs,
     updateCheckoutLineMetadata,
+    isOutOfStock,
+    outOfStockMessage,
+    shouldIncludeDefaultVariant,
   ]);
   const productBreadcrumbItems = [
     { text: "HOME", link: "/" },
@@ -1905,15 +1844,12 @@ export default function ProductDetailPage() {
                   <span>
                     SKU:{" "}
                     <span className="font-semibold text-[var(--color-secondary-800)]">
-                      {selectedVariant.sku}
+                      {product?.defaultVariant?.sku ?? "N/A"}
                     </span>
                   </span>
-                  {typeof selectedVariant.quantityAvailable === "number" && (
-                    <p className="text-sm lg:text-base font-medium bg-[var(--color-secondary-100)] px-2 py-[2px] text-black">
-                      IN STOCK:{" "}
-                      <span className="font-medium">
-                        {selectedVariant.quantityAvailable}
-                      </span>
+                  {isOutOfStock && (
+                    <p className="text-sm lg:text-base font-medium bg-red-100 px-2 py-[2px] text-red-700">
+                      This item is currently out of stock.
                     </p>
                   )}
                 </div>
@@ -1976,6 +1912,14 @@ export default function ProductDetailPage() {
                 return null;
               })()}
 
+              {/* Variant Selection / Option Sets / Add to Cart — wait for PL option sets API */}
+              {optionsLoading ? (
+                <div className="flex items-center gap-3 py-6">
+                  <div className="size-5 border-t-2 border-[var(--color-secondary-400)] rounded-full animate-spin" />
+                  <span className="text-sm text-[var(--color-secondary-500)] font-secondary">Loading options…</span>
+                </div>
+              ) : (
+              <>
               {/* Regular Variants (not part of option sets) */}
               {product?.metadata.find((item) => item?.key === "availability")
                 ?.value !== "Please Call" && (
@@ -2030,23 +1974,23 @@ export default function ProductDetailPage() {
                 </>
               )}
 
-              {/* Option Sets (SKU-based) */}
+              {/* Option Sets (Variant-scoped from PL API) */}
               {product?.metadata.find((item) => item?.key === "availability")
                 ?.value !== "Please Call" &&
-                visibleOptionSets.length > 0 && (
+                variantOptionSets.length > 0 && (
                   <div className="mb-10 space-y-6">
-                    {visibleOptionSets.map((optionSet) => {
-                      const selectedIds =
-                        optionSetSelections[optionSet.name] || [];
-                      const isMulti = optionSet.type === "multi-enum";
-                      const errorKey = `optionSet_${optionSet.name}`;
+                    {variantOptionSets.map((os) => {
+                      const osKey = String(os.id);
+                      const selectedIds = optionSetSelections[osKey] || [];
+                      const isMulti = os.type === "multi-enum";
+                      const errorKey = `optionSet_${os.id}`;
                       const hasError = !!validationErrors[errorKey];
 
                       return (
-                        <div key={optionSet.name}>
+                        <div key={os.id}>
                           <label className="block font-secondary text-lg font-semibold text-[var(--color-secondary-800)] uppercase mb-4 -tracking-[0.045px]">
-                            {optionSet.label}
-                            {optionSet.required && (
+                            {os.label}
+                            {os.required && (
                               <span className="text-red-500 ml-1">*</span>
                             )}
                           </label>
@@ -2054,19 +1998,22 @@ export default function ProductDetailPage() {
                           {isMulti ? (
                             // Multi-select checkboxes
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                              {optionSet.variants.map((variant) => {
+                              {os.variants?.map((plVariant) => {
                                 const isSelected = selectedIds.includes(
-                                  variant.id
+                                  plVariant.product_variant_id
+                                );
+                                const saleorVariant = product?.variants?.find(
+                                  (v) => v.id === plVariant.product_variant_id
                                 );
                                 const price =
-                                  variant.pricing?.price?.gross?.amount ?? 0;
+                                  saleorVariant?.pricing?.price?.gross?.amount ?? 0;
                                 return (
                                   <div
-                                    key={variant.id}
+                                    key={plVariant.product_variant_id}
                                     onClick={() =>
                                       handleOptionSetChange(
-                                        optionSet.name,
-                                        variant.id,
+                                        osKey,
+                                        plVariant.product_variant_id,
                                         true
                                       )
                                     }
@@ -2083,17 +2030,17 @@ export default function ProductDetailPage() {
                                         checked={isSelected}
                                         onChange={() =>
                                           handleOptionSetChange(
-                                            optionSet.name,
-                                            variant.id,
+                                            osKey,
+                                            plVariant.product_variant_id,
                                             true
                                           )
                                         }
                                       />
                                       <p
-                                        title={variant.name}
+                                        title={plVariant.product_variant_name}
                                         className="font-medium -tracking-[0.04px]"
                                       >
-                                        {variant.name}
+                                        {plVariant.product_variant_name}
                                       </p>
                                     </div>
                                     {price > 0 && (
@@ -2116,24 +2063,24 @@ export default function ProductDetailPage() {
                               value={selectedIds[0] || ""}
                               onChange={(e) =>
                                 handleOptionSetChange(
-                                  optionSet.name,
+                                  osKey,
                                   e.target.value,
                                   false
                                 )
                               }
                             >
-                              <option
-                                value=""
-                                disabled={optionSet.required}
-                              >
-                                {optionSet.deselect?.trim() || `Select ${optionSet.label}`}
+                              <option value="">
+                                {`Select ${os.label}`}
                               </option>
-                              {optionSet.variants.map((variant) => {
+                              {os.variants?.map((plVariant) => {
+                                const saleorVariant = product?.variants?.find(
+                                  (v) => v.id === plVariant.product_variant_id
+                                );
                                 const price =
-                                  variant.pricing?.price?.gross?.amount ?? 0;
+                                  saleorVariant?.pricing?.price?.gross?.amount ?? 0;
                                 return (
-                                  <option key={variant.id} value={variant.id}>
-                                    {variant.name}
+                                  <option key={plVariant.product_variant_id} value={plVariant.product_variant_id}>
+                                    {plVariant.product_variant_name}
                                     {price > 0
                                       ? ` (+${moneyFmt.format(price)})`
                                       : ""}
@@ -2154,26 +2101,27 @@ export default function ProductDetailPage() {
                   </div>
                 )}
 
-              {/* Non-SKU Options (text, date, datetime inputs) */}
+              {/* Product-Scoped Options (text, date, date-time inputs from PL API) */}
               {product?.metadata.find((item) => item?.key === "availability")
                 ?.value !== "Please Call" &&
-                visibleNonSkuOptions.length > 0 && (
+                productOptionSets.length > 0 && (
                   <div className="mb-10 space-y-6">
-                    {visibleNonSkuOptions.map((option) => {
-                      const errorKey = `nonSku_${option.name}`;
+                    {productOptionSets.map((os) => {
+                      const osKey = String(os.id);
+                      const errorKey = `nonSku_${os.id}`;
                       const hasError = !!validationErrors[errorKey];
-                      const value = nonSkuInputs[option.name] || "";
+                      const value = nonSkuInputs[osKey] || "";
 
                       return (
-                        <div key={option.name}>
+                        <div key={os.id}>
                           <label className="block font-secondary text-lg font-semibold text-[var(--color-secondary-800)] uppercase mb-4 -tracking-[0.045px]">
-                            {option.label}
-                            {option.required && (
+                            {os.label}
+                            {os.required && (
                               <span className="text-red-500 ml-1">*</span>
                             )}
                           </label>
 
-                          {option.type === "text" && (
+                          {os.type === "text" && (
                             <input
                               type="text"
                               className={`w-full border px-4 py-3 font-secondary text-sm md:text-base -tracking-[0.04px] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] ${
@@ -2184,15 +2132,15 @@ export default function ProductDetailPage() {
                               value={value}
                               onChange={(e) =>
                                 handleNonSkuInputChange(
-                                  option.name,
+                                  osKey,
                                   e.target.value
                                 )
                               }
-                              placeholder={`Enter ${option.label.toLowerCase()}`}
+                              placeholder={`Enter ${os.label.toLowerCase()}`}
                             />
                           )}
 
-                          {option.type === "date" && (
+                          {os.type === "date" && (
                             <input
                               type="date"
                               className={`w-full border px-4 py-3 font-secondary text-sm md:text-base -tracking-[0.04px] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] ${
@@ -2203,14 +2151,14 @@ export default function ProductDetailPage() {
                               value={value}
                               onChange={(e) =>
                                 handleNonSkuInputChange(
-                                  option.name,
+                                  osKey,
                                   e.target.value
                                 )
                               }
                             />
                           )}
 
-                          {option.type === "datetime" && (
+                          {os.type === "date-time" && (
                             <input
                               type="datetime-local"
                               className={`w-full border px-4 py-3 font-secondary text-sm md:text-base -tracking-[0.04px] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-600)] ${
@@ -2221,7 +2169,7 @@ export default function ProductDetailPage() {
                               value={value}
                               onChange={(e) =>
                                 handleNonSkuInputChange(
-                                  option.name,
+                                  osKey,
                                   e.target.value
                                 )
                               }
@@ -2275,7 +2223,7 @@ export default function ProductDetailPage() {
                   <CommonButton
                     className="w-full"
                     onClick={handleAddToCart}
-                    disabled={!product || isAdding || currentPrice === 0}
+                    disabled={!product || isAdding || displayPrice === 0 || isOutOfStock}
                     variant="secondary"
                   >
                     {isAdding ? (
@@ -2293,7 +2241,8 @@ export default function ProductDetailPage() {
                     onClick={handleBuyNow}
                     disabled={
                       buying ||
-                      currentPrice === 0 ||
+                      isOutOfStock ||
+                      displayPrice === 0 ||
                       // Disable if no regular variant AND no option set selections
                       (!selectedVariant &&
                         Object.keys(optionSetSelections).length === 0)
@@ -2307,6 +2256,8 @@ export default function ProductDetailPage() {
               >
                 {ProductInquiryIcon} <p>Item Inquiry</p>{" "}
               </div> */}
+              </>
+              )}
 
               {/* Extra details (Dimensions/Weight) */}
               {hasAnyDimension && (

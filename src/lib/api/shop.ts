@@ -338,6 +338,7 @@ export type PLSearchProduct = {
   } | null;
   price_min?: number;
   price_max?: number;
+  default_variant_price?: number;
   currency?: string;
   media?: Array<{
     id: number;
@@ -1253,6 +1254,35 @@ function getImageUrlFromProductTypeMetadata(
   return null;
 }
 
+/* ----------------- PL Option Set Types ----------------- */
+export interface PLOptionSetVariant {
+  id: number;
+  option_set_id: number;
+  product_variant_id: string;
+  product_variant_name: string;
+  base_variant_required: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PLOptionSet {
+  id: number;
+  name: string;
+  type: "enum" | "multi-enum" | "text" | "date" | "date-time" | "image";
+  required: boolean;
+  hidden: boolean;
+  label: string;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+  variants?: PLOptionSetVariant[];
+}
+
+export interface PLOptionSetsResponse {
+  data: PLOptionSet[];
+}
+
 /* ----------------- Public API ----------------- */
 export { transformGraphQLProductToProduct, getImageUrlFromProductTypeMetadata };
 
@@ -1421,6 +1451,10 @@ export const shopApi = {
   async brandsProductPL(): Promise<{ brands: CategoryAPIType[] }> {
     return partsLogicGet("/api/brands?page=1&per_page=100");
   },
+  async getProductOptionSets(productId: string): Promise<PLOptionSetsResponse> {
+    return partsLogicGet(`/api/storefront/products/${productId}/option-sets`);
+  },
+
   async getProductsBySlug({
     slug,
     page = 1,
