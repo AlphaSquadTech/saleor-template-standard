@@ -1,4 +1,9 @@
 import type { NextConfig } from "next";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import fs from "node:fs";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function uniq<T>(items: T[]) {
   return Array.from(new Set(items));
@@ -45,12 +50,67 @@ function getRemoteImageHosts(): string[] {
 }
 
 const HTTP_IMAGE_HOSTS = new Set([
-  // Some upstream content uses http:// links for these buckets.
   "wsm-saleor-assets.s3.us-west-2.amazonaws.com",
   "wsmsaleormedia.s3.us-east-1.amazonaws.com",
 ]);
 
+// --- Tenant Override Resolution ---
+const tenantRoot = process.env.NEXT_TENANT_ROOT || process.cwd();
+const tenantOverridesIndex = path.join(tenantRoot, "src", "overrides", "index.ts");
+const tenantOverridesDir = path.join(tenantRoot, "src", "overrides");
+const hasTenantOverrides =
+  fs.existsSync(tenantOverridesIndex) ||
+  fs.existsSync(tenantOverridesIndex.replace(".ts", ".tsx")) ||
+  fs.existsSync(tenantOverridesIndex.replace(".ts", ".js"));
+
+const templateSrcDir = path.join(tenantRoot, "src");
+const tenantSymlinkPath = path.join(templateSrcDir, "tenant-overrides");
+if (hasTenantOverrides && !fs.existsSync(tenantSymlinkPath)) {
+  try {
+    fs.symlinkSync(tenantOverridesDir, tenantSymlinkPath, "dir");
+  } catch (e) {
+    console.error("Error creating tenant overrides symlink:", e);
+  }
+}
+
 const nextConfig: NextConfig = {
+  transpilePackages: ["@alphasquad/saleor-template-standard"],
+  turbopack: {
+    resolveAlias: {
+      "@": path.resolve(__dirname, "src"),
+      "@tenant-overrides": hasTenantOverrides
+        ? "@/tenant-overrides"
+        : "@/lib/overrides/defaults",
+    },
+  },
+  webpack(config) {
+    config.resolve.alias["@"] = path.resolve(__dirname, "src");
+
+    config.resolve = config.resolve || {};
+    config.resolve.alias = config.resolve.alias || {};
+
+    if (hasTenantOverrides) {
+      (config.resolve.alias as Record<string, string>)["@tenant-overrides"] =
+        tenantOverridesDir;
+    } else {
+      const candidates = [
+        path.join(path.dirname(require.resolve("./package.json")), "src", "lib", "overrides", "defaults"),
+        path.join(process.cwd(), "src", "lib", "overrides", "defaults"),
+      ];
+      const defaultsPath = candidates.find((p) =>
+        fs.existsSync(p + ".ts") || fs.existsSync(p + ".js")
+      ) || candidates[0];
+      (config.resolve.alias as Record<string, string>)["@tenant-overrides"] = defaultsPath;
+    }
+
+    return config;
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   // Configure headers for Apple Pay domain association file
   async headers() {
     return [

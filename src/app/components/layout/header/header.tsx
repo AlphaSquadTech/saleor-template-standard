@@ -2,12 +2,13 @@ import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { NavBar } from "./navBar";
 import TopBar from "./topBar";
+import { storefrontOverrides } from "@tenant-overrides";
 
-export const Header = async () => {
-  const cookieStore = await cookies();
-  const initialIsLoggedIn =
-    cookieStore.get("isLoggedIn")?.value === "1" || !!cookieStore.get("token");
+export interface HeaderRendererProps {
+  initialIsLoggedIn: boolean;
+}
 
+const DefaultHeaderRenderer = ({ initialIsLoggedIn }: HeaderRendererProps) => {
   return (
     <header className="w-full">
       <Suspense
@@ -18,10 +19,20 @@ export const Header = async () => {
           />
         }
       >
-        {/* Contact + Timings Banner */}
         <TopBar />
       </Suspense>
       <NavBar initialIsLoggedIn={initialIsLoggedIn} />
     </header>
   );
+};
+
+export const Header = async () => {
+  const cookieStore = await cookies();
+  const initialIsLoggedIn =
+    cookieStore.get("isLoggedIn")?.value === "1" || !!cookieStore.get("token");
+
+  const HeaderRenderer =
+    (storefrontOverrides as any).Header || DefaultHeaderRenderer;
+
+  return <HeaderRenderer initialIsLoggedIn={initialIsLoggedIn} />;
 };

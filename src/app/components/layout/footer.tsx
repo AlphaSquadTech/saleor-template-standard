@@ -1,3 +1,4 @@
+import { storefrontOverrides } from "@tenant-overrides";
 import Link from "next/link";
 import PaymentMethods from "./paymentMethods";
 import SocialLinks from "./socialLinks";
@@ -27,6 +28,10 @@ type FooterSection = {
   url?: string;
   children: FooterChild[];
 };
+
+export interface FooterRendererProps {
+  footerMenu: any;
+}
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
   <span
@@ -94,10 +99,8 @@ const getTargetFromMetadata = (
   return targetMetadata?.value === "_blank" ? "_blank" : "_self";
 };
 
-const Footer = async () => {
+const DefaultFooterRenderer = async ({ footerMenu }: FooterRendererProps) => {
   const currentYear = new Date().getFullYear();
-  // Fetch footer menu data from backend
-  const footerMenu = await fetchMenuBySlug("footer");
   // Always show static data, add dynamic data if available
   const dynamicSections: FooterSection[] =
     footerMenu &&
@@ -230,5 +233,13 @@ const Footer = async () => {
     </footer>
   );
 };
+
+async function Footer() {
+  const footerMenu = await fetchMenuBySlug("footer");
+  const FooterRenderer =
+    (storefrontOverrides as any).Footer || DefaultFooterRenderer;
+
+  return <FooterRenderer footerMenu={footerMenu} />;
+}
 
 export default Footer;

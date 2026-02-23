@@ -1,7 +1,6 @@
 {
-  "name": "saleor-template-standard",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@alphasquad/saleor-template-standard",
+  "version": "0.1.5",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -31,6 +30,16 @@
     "swiper": "^11.2.10",
     "tailwind-merge": "^3.3.1",
     "zustand": "^5.0.7"
+  },
+  "peerDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "peerDependenciesMeta": {
+    "@tailwindcss/postcss": { "optional": false },
+    "tailwindcss": { "optional": false },
+    "typescript": { "optional": false }
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

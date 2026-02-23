@@ -1,4 +1,5 @@
 "use client";
+import { storefrontOverrides } from "@tenant-overrides";
 import { SwiperArrowIconLeft } from "@/app/utils/svgs/swiperArrowIconLeft";
 import { SwiperArrowIconRight } from "@/app/utils/svgs/swiperArrowIconRight";
 import { GET_PAGE_METADATA_BY_SLUG } from "@/graphql/queries/getHeroMetadata";
@@ -45,7 +46,7 @@ const HeroBackground = ({ src, alt }: { src?: string | null; alt: string }) => {
   );
 };
 
-export const ShowroomHeroCarousel = ({ slides }: ShowroomHeroCarouselProps) => {
+const DefaultShowroomHeroCarousel = ({ slides }: ShowroomHeroCarouselProps) => {
   const { data, loading } = useQuery(GET_PAGE_METADATA_BY_SLUG, {
     variables: { slug: "hero-section" },
   });
@@ -115,3 +116,7 @@ export const ShowroomHeroCarousel = ({ slides }: ShowroomHeroCarouselProps) => {
     </div>
   );
 };
+
+export const ShowroomHeroCarousel =
+  (storefrontOverrides as any).ShowroomHeroCarousel ||
+  DefaultShowroomHeroCarousel;
