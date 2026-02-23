@@ -1,6 +1,6 @@
 {
   "name": "@alphasquad/saleor-template-standard",
-  "version": "0.1.5",
+  "version": "0.1.1",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
