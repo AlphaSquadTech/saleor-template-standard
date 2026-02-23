@@ -1,3 +1,4 @@
+import { withOverride } from "@/lib/overrides/resolve";
 import {
   generateOrganizationSchema,
   generateWebsiteSchema,
@@ -35,7 +36,7 @@ const Promotions = dynamic(
   },
 );
 
-export default function Home() {
+function DefaultHome() {
   const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(
     /\/$/,
     "",
@@ -194,3 +195,6 @@ export default function Home() {
     </>
   );
 }
+
+const HomePage = withOverride("HomePage", DefaultHome);
+export default HomePage;
