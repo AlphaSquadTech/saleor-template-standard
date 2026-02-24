@@ -4,8 +4,8 @@ import Link from "next/link";
 import AncillaryContent from "@/app/components/ancillary/AncillaryContent";
 import ContentSkeleton from "@/app/components/skeletons/ContentSkeleton";
 import { getStoreName } from "@/app/utils/branding";
-import Breadcrumb from "../components/reuseableUI/breadcrumb";
-import Heading from "../components/reuseableUI/heading";
+import Breadcrumb from "@/app/components/reuseableUI/breadcrumb";
+import Heading from "@/app/components/reuseableUI/heading";
 
 export const metadata: Metadata = {
   title: `FAQ - ${getStoreName()}`,

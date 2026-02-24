@@ -1,1 +1,0 @@
-../../core/src/lib/trpc-client.ts

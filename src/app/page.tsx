@@ -1,1 +1,1 @@
-../../core/src/app/page.tsx
+export { default, metadata, revalidate } from '@core/app/page'

@@ -88,6 +88,7 @@ const nextConfig: NextConfig = {
       // For turbopack, we can only set one path per alias.
       // Tenant src takes priority; core is added via resolveModules-like behavior.
       "@": tenantSrcDir,
+      "@core": path.resolve(__dirname, "core", "src"),
       "@tenant-overrides": hasTenantOverrides
         ? "@/tenant-overrides"
         : hasCoreSubmodule
@@ -116,6 +117,9 @@ const nextConfig: NextConfig = {
     } else {
       (config.resolve.alias as Record<string, string>)["@"] = tenantSrcDir;
     }
+
+    // @core alias — always points to core/src
+    (config.resolve.alias as Record<string, string | string[]>)["@core"] = coreSrcDir;
 
     // Tenant overrides resolution
     if (hasTenantOverrides) {

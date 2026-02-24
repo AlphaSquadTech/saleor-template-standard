@@ -3,6 +3,4 @@
 import "./globals.css";
 
 // Re-export everything from core's layout
-// Using direct path since @/ would resolve to this file first
-export { default } from "../../core/src/app/layout";
-export { metadata } from "../../core/src/app/layout";
+export { default, metadata } from "@core/app/layout";

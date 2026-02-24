@@ -1,7 +1,7 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Breadcrumb from "../components/reuseableUI/breadcrumb";
+import Breadcrumb from "@/app/components/reuseableUI/breadcrumb";
 import StoreLocator from "./components/storeLocator";
 
 const locatorBreadcrumbItems = [

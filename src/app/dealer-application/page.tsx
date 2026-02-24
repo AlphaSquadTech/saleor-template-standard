@@ -8,13 +8,13 @@ import { useRecaptcha } from "@/hooks/useRecaptcha";
 import { useQuery } from "@apollo/client";
 import React, { Suspense, useEffect, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { useAppConfiguration } from "../components/providers/ServerAppConfigurationProvider";
-import Breadcrumb from "../components/reuseableUI/breadcrumb";
-import { ErrorTag } from "../components/reuseableUI/errorTag";
-import Heading from "../components/reuseableUI/heading";
-import PrimaryButton from "../components/reuseableUI/primaryButton";
-import Toast from "../components/reuseableUI/Toast";
-import { SpinnerIcon } from "../utils/svgs/spinnerIcon";
+import { useAppConfiguration } from "@/app/components/providers/ServerAppConfigurationProvider";
+import Breadcrumb from "@/app/components/reuseableUI/breadcrumb";
+import { ErrorTag } from "@/app/components/reuseableUI/errorTag";
+import Heading from "@/app/components/reuseableUI/heading";
+import PrimaryButton from "@/app/components/reuseableUI/primaryButton";
+import Toast from "@/app/components/reuseableUI/Toast";
+import { SpinnerIcon } from "@/app/utils/svgs/spinnerIcon";
 
 function DealerApplication() {
   const [formData, setFormData] = useState<Record<string, string>>({});
