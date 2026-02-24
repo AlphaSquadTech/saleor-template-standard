@@ -3,8 +3,8 @@ import ContentSkeleton from "@/app/components/skeletons/ContentSkeleton";
 import { getStoreName } from "@/app/utils/branding";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import Breadcrumb from "../components/reuseableUI/breadcrumb";
-import Heading from "../components/reuseableUI/heading";
+import Breadcrumb from "@/app/components/reuseableUI/breadcrumb";
+import Heading from "@/app/components/reuseableUI/heading";
 
 export const metadata: Metadata = {
   title: `Warranty - ${getStoreName()}`,

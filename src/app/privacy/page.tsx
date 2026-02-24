@@ -1,8 +1,8 @@
 import React from "react";
 import type { Metadata } from "next";
-import Heading from "../components/reuseableUI/heading";
-import Breadcrumb from "../components/reuseableUI/breadcrumb";
-import Section from "../components/reuseableUI/section";
+import Heading from "@/app/components/reuseableUI/heading";
+import Breadcrumb from "@/app/components/reuseableUI/breadcrumb";
+import Section from "@/app/components/reuseableUI/section";
 import { privacyPolicySections } from "./constant";
 import { getStoreName } from "@/app/utils/branding";
 

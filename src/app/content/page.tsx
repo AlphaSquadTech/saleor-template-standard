@@ -6,9 +6,9 @@ import {
 } from "@/lib/schema";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import BlogList from "../components/blog/BlogList";
-import Breadcrumb from "../components/reuseableUI/breadcrumb";
-import Heading from "../components/reuseableUI/heading";
+import BlogList from "@/app/components/blog/BlogList";
+import Breadcrumb from "@/app/components/reuseableUI/breadcrumb";
+import Heading from "@/app/components/reuseableUI/heading";
 
 export const metadata: Metadata = {
   title: `Content - ${getStoreName()}`,

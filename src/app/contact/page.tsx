@@ -3,19 +3,19 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useQuery } from "@apollo/client";
 import ReCAPTCHA from "react-google-recaptcha";
-import Heading from "../components/reuseableUI/heading";
-import Breadcrumb from "../components/reuseableUI/breadcrumb";
-import PrimaryButton from "../components/reuseableUI/primaryButton";
-import Toast from "../components/reuseableUI/Toast";
-import { SpinnerIcon } from "../utils/svgs/spinnerIcon";
-import { ErrorTag } from "../components/reuseableUI/errorTag";
+import Heading from "@/app/components/reuseableUI/heading";
+import Breadcrumb from "@/app/components/reuseableUI/breadcrumb";
+import PrimaryButton from "@/app/components/reuseableUI/primaryButton";
+import Toast from "@/app/components/reuseableUI/Toast";
+import { SpinnerIcon } from "@/app/utils/svgs/spinnerIcon";
+import { ErrorTag } from "@/app/components/reuseableUI/errorTag";
 import { useRecaptcha } from "@/hooks/useRecaptcha";
-import { useAppConfiguration } from "../components/providers/ServerAppConfigurationProvider";
+import { useAppConfiguration } from "@/app/components/providers/ServerAppConfigurationProvider";
 import {
   GET_CONTACT_PAGE,
   type ContactPageData,
 } from "@/graphql/queries/getContactPage";
-import EditorRenderer from "../components/richText/EditorRenderer";
+import EditorRenderer from "@/app/components/richText/EditorRenderer";
 
 function ContactUsInner() {
   const [formData, setFormData] = useState<Record<string, string>>({});
