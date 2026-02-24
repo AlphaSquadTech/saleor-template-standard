@@ -45,7 +45,7 @@ export async function getBlogSitemapEntries(): Promise<MetadataRoute.Sitemap> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
     // Import blog posts from the constant file
-    const { blogPosts } = await import('../app/blog/constant')
+    const { blogPosts } = await import('@/app/blog/constant')
 
     return blogPosts.map(post => ({
       url: `${baseUrl}/blog/${post.slug}`,
