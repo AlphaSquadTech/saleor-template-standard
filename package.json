@@ -6,7 +6,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "create-tenant": "node cli/create-storefront.js"
+    "create-tenant": "node cli/create-storefront.js",
+    "preinstall": "bash ./scripts/init-submodule.sh"
   },
   "dependencies": {
     "@apollo/client": "^3.13.9",
