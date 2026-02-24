@@ -5,7 +5,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "create-tenant": "node cli/create-storefront.js"
   },
   "dependencies": {
     "@apollo/client": "^3.13.9",
@@ -37,9 +38,15 @@
     "typescript": "^5"
   },
   "peerDependenciesMeta": {
-    "@tailwindcss/postcss": { "optional": false },
-    "tailwindcss": { "optional": false },
-    "typescript": { "optional": false }
+    "@tailwindcss/postcss": {
+      "optional": false
+    },
+    "tailwindcss": {
+      "optional": false
+    },
+    "typescript": {
+      "optional": false
+    }
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -53,5 +60,8 @@
     "eslint-config-next": "15.4.5",
     "tailwindcss": "^4.1.11",
     "typescript": "^5"
+  },
+  "bin": {
+    "create-storefront": "./cli/create-storefront.js"
   }
 }
