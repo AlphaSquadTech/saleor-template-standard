@@ -34,6 +34,7 @@ jobs:
           fi
 
       - name: Create PR
+        id: create-pr
         if: steps.check.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
@@ -42,3 +43,9 @@ jobs:
           body: "Automated update of storefront-core submodule to latest main."
           branch: chore/bump-core
           delete-branch: true
+
+      - name: Auto-merge PR
+        if: steps.create-pr.outputs.pull-request-number
+        run: gh pr merge ${{ steps.create-pr.outputs.pull-request-number }} --squash --auto
+        env:
+          GH_TOKEN: ${{ secrets.CORE_PAT }}
