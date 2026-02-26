@@ -5,14 +5,14 @@ set -eu
 if [ "${VERCEL:-}" = "1" ]; then
   echo "[submodule] Vercel CI detected — setting up SSH deploy key..."
 
-  if [ -z "${SALEOR_STANDARD_SSH_PRIVATE_KEY_BASE64:-}" ]; then
-    echo "[submodule] ERROR: SALEOR_STANDARD_SSH_PRIVATE_KEY_BASE64 env var is not set." >&2
+  if [ -z "${SALEOR_ADVANCE_SSH_PRIVATE_KEY_BASE64:-}" ]; then
+    echo "[submodule] ERROR: SALEOR_ADVANCE_SSH_PRIVATE_KEY_BASE64 env var is not set." >&2
     exit 1
   fi
 
   mkdir -p ~/.ssh
   # Decode the Base64 key
-  echo "$SALEOR_STANDARD_SSH_PRIVATE_KEY_BASE64" | base64 --decode > ~/.ssh/id_ed25519
+  echo "$SALEOR_ADVANCE_SSH_PRIVATE_KEY_BASE64" | base64 --decode > ~/.ssh/id_ed25519
   chmod 600 ~/.ssh/id_ed25519
 
   # Force Git to use this specific key and disable the interactive known_hosts prompt
