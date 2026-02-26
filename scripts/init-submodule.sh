@@ -1,13 +1,28 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/bash
+set -eu
 
-if [ -z "${CORE_REPO_PAT:-}" ]; then
-  echo "Error: CORE_REPO_PAT is not set."
-  exit 1
+# Detect environment: Vercel sets the VERCEL=1 env var automatically
+if [ "${VERCEL:-}" = "1" ]; then
+  echo "[submodule] Vercel CI detected — setting up SSH deploy key..."
+
+  if [ -z "${SALEOR_STANDARD_SSH_PRIVATE_KEY_BASE64:-}" ]; then
+    echo "[submodule] ERROR: SALEOR_STANDARD_SSH_PRIVATE_KEY_BASE64 env var is not set." >&2
+    exit 1
+  fi
+
+  mkdir -p ~/.ssh
+  # Decode the Base64 key
+  echo "$SALEOR_STANDARD_SSH_PRIVATE_KEY_BASE64" | base64 --decode > ~/.ssh/id_ed25519
+  chmod 600 ~/.ssh/id_ed25519
+
+  # Force Git to use this specific key and disable the interactive known_hosts prompt
+  export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no"
+
+  echo "[submodule] SSH deploy key configured."
+else
+  echo "[submodule] Local environment detected — using existing SSH agent."
 fi
 
-git config --global url."https://${CORE_REPO_PAT}@github.com/".insteadOf "https://github.com/"
-git submodule sync
+# Initialize and update submodules
 git submodule update --init --recursive
-
-echo "Core submodule initialized."
+echo "[submodule] Submodules initialized successfully."
