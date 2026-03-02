@@ -10,12 +10,23 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
+      - name: Setup SSH deploy key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SALEOR_ADVANCE_SSH_PRIVATE_KEY_BASE64 }}" | base64 --decode > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
       - uses: actions/checkout@v4
         with:
-          submodules: true
           fetch-depth: 0
-          token: ${{ secrets.CORE_PAT }}
+
+      - name: Initialize submodules
+        run: git submodule update --init --recursive
 
       - name: Update submodule
         run: |
@@ -48,4 +59,4 @@ jobs:
         if: steps.create-pr.outputs.pull-request-number
         run: gh pr merge ${{ steps.create-pr.outputs.pull-request-number }} --squash --auto
         env:
-          GH_TOKEN: ${{ secrets.CORE_PAT }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
