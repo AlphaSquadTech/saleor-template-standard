@@ -12,7 +12,6 @@
   "dependencies": {
     "@apollo/client": "^3.13.9",
     "@next/third-parties": "^15.5.4",
-    "@tailwindcss/oxide-linux-x64-gnu": "^4.2.1",
     "@trpc/client": "^11.10.0",
     "@trpc/server": "^11.10.0",
     "@types/googlemaps": "^3.43.3",
