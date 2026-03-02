@@ -57,6 +57,21 @@ jobs:
 
       - name: Auto-merge PR
         if: steps.create-pr.outputs.pull-request-number
-        run: gh pr merge ${{ steps.create-pr.outputs.pull-request-number }} --squash --auto
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.create-pr.outputs.pull-request-number }}
+        run: |
+          echo "Waiting for GitHub to calculate mergeability..."
+          sleep 5
+          
+          # Get mergeable status (CLEAN, CONFLICTING, or UNKNOWN)
+          STATUS=$(gh pr view "$PR_NUMBER" --json mergeable --template '{{.mergeable}}')
+          
+          if [ "$STATUS" = "CONFLICTING" ]; then
+            echo "PR has conflicts. Manual intervention required."
+            exit 1
+          fi
+
+          # Attempt --auto first (respects protection rules). 
+          # Fallback to immediate merge if --auto is not supported/configured.
+          gh pr merge "$PR_NUMBER" --squash --auto || gh pr merge "$PR_NUMBER" --squash
