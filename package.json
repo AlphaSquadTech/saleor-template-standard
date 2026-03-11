@@ -6,6 +6,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "overrides:check": "node scripts/overrides-check.cjs",
     "create-tenant": "node cli/create-storefront.js",
     "preinstall": "bash ./scripts/init-submodule.sh"
   },
