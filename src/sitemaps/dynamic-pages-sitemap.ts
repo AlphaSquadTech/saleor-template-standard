@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { getCategoryHref } from '@core/lib/category-hierarchy'
 
 interface SitemapProduct {
   id: string
@@ -146,15 +147,19 @@ export async function getCategorySitemapEntries(): Promise<MetadataRoute.Sitemap
     const data = await response.json()
     const categories = data.facets?.categories || []
 
-    // Flatten hierarchical categories
-    const flattenCategories = (cats: SitemapCategory[]): SitemapCategory[] => {
-      const result: SitemapCategory[] = []
+    // Flatten hierarchical categories, tracking ancestor slugs for nested URLs
+    const flattenCategories = (
+      cats: SitemapCategory[],
+      ancestorSlugs: string[] = []
+    ): { slug: string; ancestorSlugs: string[]; count: number }[] => {
+      const result: { slug: string; ancestorSlugs: string[]; count: number }[] = []
       cats.forEach((cat) => {
+        const chain = [...ancestorSlugs, cat.slug]
         if (cat.count > 0) {
-          result.push(cat)
+          result.push({ slug: cat.slug, ancestorSlugs: chain, count: cat.count })
         }
         if (cat.children) {
-          result.push(...flattenCategories(cat.children))
+          result.push(...flattenCategories(cat.children, chain))
         }
       })
       return result
@@ -163,7 +168,7 @@ export async function getCategorySitemapEntries(): Promise<MetadataRoute.Sitemap
     const allCategories = flattenCategories(categories)
 
     return allCategories.map((category) => ({
-      url: `${baseUrl}/category/${encodeURIComponent(category.slug)}`,
+      url: `${baseUrl}${getCategoryHref(category.ancestorSlugs)}`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
