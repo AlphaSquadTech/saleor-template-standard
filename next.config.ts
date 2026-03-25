@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { SECURITY_HEADERS } from "./core/src/lib/security";
 
 function uniq<T>(items: T[]) {
   return Array.from(new Set(items));
@@ -50,20 +51,30 @@ const HTTP_IMAGE_HOSTS = new Set([
   "wsmsaleormedia.s3.us-east-1.amazonaws.com",
 ]);
 
+// Convert security headers object to Next.js headers format
+const securityHeadersConfig = Object.entries(SECURITY_HEADERS).map(([key, value]) => ({
+  key,
+  value,
+}));
+
 const nextConfig: NextConfig = {
-  // Configure headers for Apple Pay domain association file
+  // Configure headers for Apple Pay domain association file and global security headers
   async headers() {
     return [
       {
-        source: '/.well-known/apple-developer-merchantid-domain-association',
+        source: "/:path*",
+        headers: securityHeadersConfig,
+      },
+      {
+        source: "/.well-known/apple-developer-merchantid-domain-association",
         headers: [
           {
-            key: 'Content-Type',
-            value: 'application/octet-stream',
+            key: "Content-Type",
+            value: "application/octet-stream",
           },
           {
-            key: 'Cache-Control',
-            value: 'public, max-age=3600',
+            key: "Cache-Control",
+            value: "public, max-age=3600",
           },
         ],
       },
