@@ -8,7 +8,11 @@
     "lint": "next lint",
     "overrides:check": "node scripts/overrides-check.cjs",
     "create-tenant": "node cli/create-storefront.js",
-    "preinstall": "bash ./scripts/init-submodule.sh"
+    "preinstall": "bash ./scripts/init-submodule.sh",
+    "routes:generate": "node scripts/generate-route-wrappers.js",
+    "routes:watch": "node scripts/generate-route-wrappers.js --watch",
+    "routes:clean": "node scripts/generate-route-wrappers.js --clean",
+    "postinstall": "npm run routes:generate"
   },
   "dependencies": {
     "@apollo/client": "^3.13.9",
