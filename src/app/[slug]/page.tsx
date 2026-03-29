@@ -1,1 +1,1 @@
-export { default, dynamic, dynamicParams, revalidate, metadata } from '@core/app/[slug]/page'
+export { default, generateMetadata } from '@core/app/[slug]/page'
