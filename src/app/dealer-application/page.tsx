@@ -15,6 +15,7 @@ import Heading from "@/app/components/reuseableUI/heading";
 import PrimaryButton from "@/app/components/reuseableUI/primaryButton";
 import Toast from "@/app/components/reuseableUI/Toast";
 import { SpinnerIcon } from "@/app/utils/svgs/spinnerIcon";
+import { parseRichText, richTextToHtml } from "@/lib/richText";
 
 function DealerApplication() {
   const [formData, setFormData] = useState<Record<string, string>>({});
@@ -311,7 +312,12 @@ function DealerApplication() {
     return tempDiv.innerHTML || null;
   };
 
-  const displayDescription = cleanDescription(dealerPageData.description);
+  const parsedDescription = parseRichText(dealerPageData.description);
+  const descriptionHtml =
+    parsedDescription.kind === "tinymce"
+      ? richTextToHtml(dealerPageData.description)
+      : dealerPageData.description;
+  const displayDescription = cleanDescription(descriptionHtml);
 
   return (
     <main className="h-full w-full">

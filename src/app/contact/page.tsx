@@ -16,6 +16,7 @@ import {
   type ContactPageData,
 } from "@/graphql/queries/getContactPage";
 import EditorRenderer from "@/app/components/richText/EditorRenderer";
+import { parseRichText, richTextToHtml } from "@/lib/richText";
 
 function ContactUsInner() {
   const [formData, setFormData] = useState<Record<string, string>>({});
@@ -301,7 +302,12 @@ function ContactUsInner() {
     return tempDiv.innerHTML || null;
   };
 
-  const displayDescription = cleanDescription(contactPageData.description);
+  const parsedDescription = parseRichText(contactPageData.description);
+  const descriptionHtml =
+    parsedDescription.kind === "tinymce"
+      ? richTextToHtml(contactPageData.description)
+      : contactPageData.description;
+  const displayDescription = cleanDescription(descriptionHtml);
 
   return (
     <main className="h-full w-full">
