@@ -10,6 +10,9 @@ import Heading from "@/app/components/reuseableUI/heading";
 export const metadata: Metadata = {
   title: `Privacy Policy - ${getStoreName()}`,
   description: `Read our privacy policy to understand how ${getStoreName()} collects, uses, and protects your personal information.`,
+  alternates: {
+    canonical: "/privacy-policy",
+  },
 };
 
 export default function PrivacyPolicyPage() {

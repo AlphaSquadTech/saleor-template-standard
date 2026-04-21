@@ -11,6 +11,9 @@ import { parseRichText, richTextToPlainText } from "@core/lib/richText";
 export const metadata: Metadata = {
   title: `FAQ - ${getStoreName()}`,
   description: `Find answers to frequently asked questions about ordering, shipping, returns, and product compatibility at ${getStoreName()}.`,
+  alternates: {
+    canonical: "/frequently-asked-questions",
+  },
 };
 
 function stripHtml(input: string) {

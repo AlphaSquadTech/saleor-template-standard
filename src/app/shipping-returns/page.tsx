@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   title: `Shipping & Returns - ${getStoreName()}`,
   description:
     "Learn about our shipping options, delivery times, return policy, and how to process returns for your products.",
+  alternates: {
+    canonical: "/shipping-returns",
+  },
 };
 
 export default function ShippingAndReturnsPage() {

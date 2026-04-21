@@ -9,6 +9,9 @@ import Heading from "@/app/components/reuseableUI/heading";
 export const metadata: Metadata = {
   title: `Warranty - ${getStoreName()}`,
   description: `Learn about warranty coverage for products purchased from ${getStoreName()}. Understand your protection and claims process.`,
+  alternates: {
+    canonical: "/warranty",
+  },
 }
 
 export default function WarrantyPage() {

@@ -14,6 +14,15 @@ export const metadata: Metadata = {
   title: `Content - ${getStoreName()}`,
   description:
     "Read our latest articles, news, and insights about our products and services.",
+  alternates: {
+    canonical: "/content",
+  },
+  openGraph: {
+    title: `Content - ${getStoreName()}`,
+    description: "Read our latest articles, news, and insights about our products and services.",
+    type: "website",
+    url: "/content",
+  },
 };
 
 export default async function BlogPage() {

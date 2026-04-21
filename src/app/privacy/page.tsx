@@ -9,6 +9,9 @@ import { getStoreName } from "@/app/utils/branding";
 export const metadata: Metadata = {
   title: `Privacy - ${getStoreName()}`,
   description: `Understand how ${getStoreName()} handles your privacy and personal data. Our commitment to protecting your information.`,
+  alternates: {
+    canonical: "/privacy",
+  },
 }
 
 export default function PrivacyPolicyPage() {

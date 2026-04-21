@@ -17,16 +17,27 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await fetchBlogBySlug(slug);
+  const canonicalPath = `/content/${encodeURIComponent(slug)}`;
 
   if (!post || !post.title) {
     return {
       title: `Content Page Not Found - ${getStoreName()}`,
+      robots: { index: false, follow: false },
     };
   }
 
   return {
     title: `${post.title} - ${getStoreName()}`,
     description: post.title,
+    alternates: {
+      canonical: canonicalPath,
+    },
+    openGraph: {
+      title: `${post.title} - ${getStoreName()}`,
+      description: post.title,
+      type: "article",
+      url: canonicalPath,
+    },
   };
 }
 

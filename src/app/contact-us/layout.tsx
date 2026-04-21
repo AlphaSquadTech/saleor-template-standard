@@ -4,6 +4,9 @@ import { getStoreName } from "@/app/utils/branding"
 export const metadata: Metadata = {
   title: `Contact Us - ${getStoreName()}`,
   description: "Get in touch with our customer support team. We're here to help with product questions, orders, and technical support.",
+  alternates: {
+    canonical: "/contact-us",
+  },
 }
 
 export default function ContactUsLayout({

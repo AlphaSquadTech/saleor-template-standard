@@ -9,6 +9,9 @@ import { getStoreName } from "@/app/utils/branding";
 export const metadata: Metadata = {
   title: `Terms - ${getStoreName()}`,
   description: `Read the terms and conditions for using ${getStoreName()} services and purchasing products.`,
+  alternates: {
+    canonical: "/terms",
+  },
 }
 
 export default function TermsAndConditionsPage() {

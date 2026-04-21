@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   title: `About Us - ${getStoreName()}`,
   description:
     "Learn about our mission, values, and commitment to providing high-quality products and exceptional customer service.",
+  alternates: {
+    canonical: "/about",
+  },
 };
 
 export default function AboutUsPage() {

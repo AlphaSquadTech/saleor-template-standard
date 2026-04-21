@@ -9,6 +9,9 @@ import Heading from "@/app/components/reuseableUI/heading";
 export const metadata: Metadata = {
   title: `Terms & Conditions - ${getStoreName()}`,
   description: `Read our terms and conditions for purchasing products and using ${getStoreName()} services.`,
+  alternates: {
+    canonical: "/terms-and-conditions",
+  },
 };
 
 export default function TermsAndConditionsPage() {

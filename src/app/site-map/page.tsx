@@ -18,6 +18,9 @@ export async function generateMetadata(): Promise<Metadata> {
     return {
       title: `Site Map - ${getStoreName()}`,
       description: `Explore the comprehensive site map of ${getStoreName()} to easily navigate through all sections and find what you're looking for quickly.`,
+      alternates: {
+        canonical: "/site-map",
+      },
     };
   }
 
@@ -26,6 +29,17 @@ export async function generateMetadata(): Promise<Metadata> {
     description:
       post.title ||
       `Explore the comprehensive site map of ${getStoreName()} to easily navigate through all sections and find what you're looking for quickly.`,
+    alternates: {
+      canonical: "/site-map",
+    },
+    openGraph: {
+      title: `${post.title} - ${getStoreName()}`,
+      description:
+        post.title ||
+        `Explore the comprehensive site map of ${getStoreName()} to easily navigate through all sections and find what you're looking for quickly.`,
+      type: "website",
+      url: "/site-map",
+    },
   };
 }
 
