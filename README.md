@@ -32,6 +32,57 @@ yarn install
 yarn dev
 ```
 
+## Local Lighthouse
+
+Run Lighthouse against the production build, not `yarn dev`.
+
+Homepage mobile:
+
+```bash
+npm run lighthouse:mobile
+```
+
+Homepage desktop:
+
+```bash
+npm run lighthouse:desktop
+```
+
+Run both presets:
+
+```bash
+npm run lighthouse:all
+```
+
+Test a specific route:
+
+```bash
+npm run lighthouse -- --preset=mobile --path=/category/suspension
+```
+
+Repeat a route 3 times to compare variance:
+
+```bash
+npm run lighthouse -- --preset=mobile --path=/ --runs=3
+```
+
+Reuse an existing production build/server:
+
+```bash
+npm run build
+npm run start -- --hostname 127.0.0.1 --port 3000
+npm run lighthouse -- --preset=mobile --path=/ --skip-build --skip-start
+```
+
+Reports are written to `reports/lighthouse/` as both HTML and JSON files.
+
+Recommended workflow for mobile debugging:
+
+- Use `npm run lighthouse -- --preset=mobile --path=/ --runs=3`.
+- Focus on the median-looking run, not the best run.
+- Keep Chrome closed except for the report you are reviewing.
+- After Lighthouse, open Chrome DevTools and enable `Rendering -> Layout Shift Regions` and record a `Performance` trace on mobile emulation for the same route.
+
 ## Forms (SMTP)
 
 `POST /api/form-submission` supports SMTP delivery when these env vars are set:
