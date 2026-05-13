@@ -2,6 +2,8 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { jwtDecode } from 'jwt-decode';
 import { fetchConfigurationDirect, isFeatureActive } from '@/app/utils/configurationService';
+import { setAuthCookies } from '@/lib/auth/cookies';
+import { refreshSaleorToken } from '@/lib/auth/saleorAuth';
 
 type JwtPayload = { exp?: number };
 
@@ -183,6 +185,26 @@ export async function middleware(req: NextRequest) {
 
   // If token exists but is expired/invalid, clear cookies first.
   if (tokenCookie && isExpired) {
+    if (refreshCookie?.value) {
+      try {
+        const refreshed = await refreshSaleorToken(refreshCookie.value);
+        if (refreshed.token) {
+          const response = NextResponse.redirect(req.nextUrl);
+          setAuthCookies(response, {
+            token: refreshed.token,
+            refreshToken: refreshed.refreshToken || refreshCookie.value,
+          });
+          if (!isProd) {
+            response.headers.set('x-middleware-redirect', 'refresh:token-expired');
+            Object.entries(debugHeaders).forEach(([k, v]) => response.headers.set(k, v));
+          }
+          return response;
+        }
+      } catch {
+        // Fall through to clearing cookies below.
+      }
+    }
+
     const clearUrl = new URL('/api/auth/clear-cookies', req.url);
     clearUrl.searchParams.set('redirect', '/account/login');
     clearUrl.searchParams.set('reason', 'token-expired');
