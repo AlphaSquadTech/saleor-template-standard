@@ -1,0 +1,1 @@
+export { default, generateMetadata } from '@core/app/bundles/[slug]/page'

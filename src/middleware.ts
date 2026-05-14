@@ -6,6 +6,10 @@ import {
   SDK_ACCESS_TOKEN_SUFFIX,
   SDK_REFRESH_TOKEN_SUFFIX,
 } from '@/lib/auth/cookies';
+import {
+  refreshSaleorAuthTokens,
+  setRefreshedAuthCookies,
+} from '@/lib/auth/middlewareRefresh';
 
 function normalizeGraphqlUrl(raw?: string): string | null {
   if (!raw) return null;
@@ -116,12 +120,24 @@ export async function middleware(req: NextRequest) {
 
   const hasAccessToken = Boolean(tokenCookie);
   const canAttemptAuthenticatedRequest = hasAccessToken || Boolean(refreshCookie);
+  let refreshedAccessToken: string | null = null;
+  let refreshedRefreshToken: string | null = null;
+
+  if (!hasAccessToken && refreshCookie?.value && saleorApiUrl) {
+    const refreshed = await refreshSaleorAuthTokens(saleorApiUrl, refreshCookie.value).catch(
+      () => null,
+    );
+    if (refreshed?.token) {
+      refreshedAccessToken = refreshed.token;
+      refreshedRefreshToken = refreshed.refreshToken ?? null;
+    }
+  }
 
   // Debug headers only in non-prod and NEVER include token value
   const isProd = process.env.NODE_ENV === 'production';
   const debugHeaders: Record<string, string> = {
     'x-pathname': normalizedPath,
-    'x-has-token': tokenCookie ? '1' : '0',
+    'x-has-token': tokenCookie || refreshedAccessToken ? '1' : '0',
     'x-has-refresh': refreshCookie ? '1' : '0',
     'x-is-logged-in': canAttemptAuthenticatedRequest ? '1' : '0',
     'x-token-verified': 'sdk-storage',
@@ -129,8 +145,17 @@ export async function middleware(req: NextRequest) {
     'x-is-protected-route': isProtectedRoute ? '1' : '0',
   };
 
-  if (hasAccessToken && isAuthRoute) {
+  if ((hasAccessToken || refreshedAccessToken) && isAuthRoute) {
     const res = NextResponse.redirect(new URL('/', req.url));
+    if (saleorApiUrl) {
+      setRefreshedAuthCookies(res, {
+        saleorApiUrl,
+        accessCookieName,
+        refreshCookieName,
+        accessToken: refreshedAccessToken,
+        refreshToken: refreshedRefreshToken,
+      });
+    }
     if (!isProd) {
       res.headers.set('x-middleware-redirect', 'home:auth-while-logged-in');
       Object.entries(debugHeaders).forEach(([k, v]) => res.headers.set(k, v));
@@ -138,7 +163,7 @@ export async function middleware(req: NextRequest) {
     return res;
   }
 
-  if (!canAttemptAuthenticatedRequest && isProtectedRoute) {
+  if (!canAttemptAuthenticatedRequest && !refreshedAccessToken && isProtectedRoute) {
     const loginUrl = new URL('/account/login', req.url);
     loginUrl.searchParams.set('next', normalizedPath);
     const res = NextResponse.redirect(loginUrl);
@@ -150,6 +175,15 @@ export async function middleware(req: NextRequest) {
   }
 
   const res = NextResponse.next();
+  if (saleorApiUrl) {
+    setRefreshedAuthCookies(res, {
+      saleorApiUrl,
+      accessCookieName,
+      refreshCookieName,
+      accessToken: refreshedAccessToken,
+      refreshToken: refreshedRefreshToken,
+    });
+  }
   if (!isProd) {
     res.headers.set('x-middleware-hit', '1');
     Object.entries(debugHeaders).forEach(([k, v]) => res.headers.set(k, v));
