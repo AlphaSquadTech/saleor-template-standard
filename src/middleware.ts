@@ -1,14 +1,11 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { jwtDecode } from 'jwt-decode';
 import { fetchConfigurationDirect, isFeatureActive } from '@/app/utils/configurationService';
-import { setAuthCookies } from '@/lib/auth/cookies';
-import { refreshSaleorToken } from '@/lib/auth/saleorAuth';
-
-type JwtPayload = { exp?: number };
-
-const TOKEN_VALIDATION_TTL_MS = 10 * 1000;
-const tokenValidationCache = new Map<string, { valid: boolean; ts: number }>();
+import {
+  getSdkStorageKey,
+  SDK_ACCESS_TOKEN_SUFFIX,
+  SDK_REFRESH_TOKEN_SUFFIX,
+} from '@/lib/auth/cookies';
 
 function normalizeGraphqlUrl(raw?: string): string | null {
   if (!raw) return null;
@@ -18,52 +15,10 @@ function normalizeGraphqlUrl(raw?: string): string | null {
   const hasGraphql = lower.endsWith('/graphql') || lower.endsWith('/graphql/');
   if (!hasGraphql) {
     url = url.replace(/\/+$/, '') + '/graphql/';
+  } else if (!url.endsWith('/')) {
+    url = `${url}/`;
   }
   return url;
-}
-
-async function validateTokenWithSaleor(token: string): Promise<boolean> {
-  const cached = tokenValidationCache.get(token);
-  if (cached && Date.now() - cached.ts < TOKEN_VALIDATION_TTL_MS) {
-    return cached.valid;
-  }
-
-  const apiUrl = normalizeGraphqlUrl(process.env.NEXT_PUBLIC_API_URL);
-  if (!apiUrl) {
-    tokenValidationCache.set(token, { valid: false, ts: Date.now() });
-    return false;
-  }
-
-  try {
-    const res = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `JWT ${token}`,
-      },
-      body: JSON.stringify({
-        query: `query TokenCheck { me { id } }`,
-      }),
-    });
-
-    if (!res.ok) {
-      tokenValidationCache.set(token, { valid: false, ts: Date.now() });
-      return false;
-    }
-
-    const json = (await res.json()) as {
-      data?: { me?: { id?: string } | null } | null;
-      errors?: unknown;
-    };
-
-    const valid = Boolean(json?.data?.me?.id) && !json?.errors;
-    tokenValidationCache.set(token, { valid, ts: Date.now() });
-    return valid;
-  } catch {
-    // If Saleor is unreachable, treat as logged out for route protection.
-    tokenValidationCache.set(token, { valid: false, ts: Date.now() });
-    return false;
-  }
 }
 
 const AUTH_ROUTES = [
@@ -140,8 +95,15 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  const tokenCookie = req.cookies.get('token');
-  const refreshCookie = req.cookies.get('refreshToken');
+  const saleorApiUrl = normalizeGraphqlUrl(process.env.NEXT_PUBLIC_API_URL);
+  const accessCookieName = saleorApiUrl
+    ? getSdkStorageKey(saleorApiUrl, SDK_ACCESS_TOKEN_SUFFIX)
+    : null;
+  const refreshCookieName = saleorApiUrl
+    ? getSdkStorageKey(saleorApiUrl, SDK_REFRESH_TOKEN_SUFFIX)
+    : null;
+  const tokenCookie = accessCookieName ? req.cookies.get(accessCookieName) : undefined;
+  const refreshCookie = refreshCookieName ? req.cookies.get(refreshCookieName) : undefined;
 
   const isAuthRoute = AUTH_ROUTES.some(
     route => normalizedPath === route || normalizedPath.startsWith(route + '/')
@@ -152,24 +114,8 @@ export async function middleware(req: NextRequest) {
       prefix => normalizedPath === prefix || normalizedPath.startsWith(prefix + '/')
     ) && !isAuthRoute;
 
-  const token = tokenCookie?.value || null;
-
-  let isExpired = false;
-  if (token) {
-    try {
-      const { exp } = jwtDecode<JwtPayload>(token);
-      isExpired = !!exp && exp * 1000 <= Date.now();
-    } catch {
-      // If token can't be decoded, treat it as expired/invalid for protection logic.
-      isExpired = true;
-    }
-  }
-
-  // Only verify with Saleor when we need the answer for routing decisions.
-  const shouldVerify = Boolean(token) && !isExpired && (isAuthRoute || isProtectedRoute);
-  const tokenVerified = shouldVerify && token ? await validateTokenWithSaleor(token) : null;
-
-  const isLoggedIn = Boolean(token) && !isExpired && (tokenVerified ?? true);
+  const hasAccessToken = Boolean(tokenCookie);
+  const canAttemptAuthenticatedRequest = hasAccessToken || Boolean(refreshCookie);
 
   // Debug headers only in non-prod and NEVER include token value
   const isProd = process.env.NODE_ENV === 'production';
@@ -177,46 +123,13 @@ export async function middleware(req: NextRequest) {
     'x-pathname': normalizedPath,
     'x-has-token': tokenCookie ? '1' : '0',
     'x-has-refresh': refreshCookie ? '1' : '0',
-    'x-is-logged-in': isLoggedIn ? '1' : '0',
-    'x-token-verified': tokenVerified === null ? 'skip' : tokenVerified ? '1' : '0',
+    'x-is-logged-in': canAttemptAuthenticatedRequest ? '1' : '0',
+    'x-token-verified': 'sdk-storage',
     'x-is-auth-route': isAuthRoute ? '1' : '0',
     'x-is-protected-route': isProtectedRoute ? '1' : '0',
   };
 
-  // If token exists but is expired/invalid, clear cookies first.
-  if (tokenCookie && isExpired) {
-    if (refreshCookie?.value) {
-      try {
-        const refreshed = await refreshSaleorToken(refreshCookie.value);
-        if (refreshed.token) {
-          const response = NextResponse.redirect(req.nextUrl);
-          setAuthCookies(response, {
-            token: refreshed.token,
-            refreshToken: refreshed.refreshToken || refreshCookie.value,
-          });
-          if (!isProd) {
-            response.headers.set('x-middleware-redirect', 'refresh:token-expired');
-            Object.entries(debugHeaders).forEach(([k, v]) => response.headers.set(k, v));
-          }
-          return response;
-        }
-      } catch {
-        // Fall through to clearing cookies below.
-      }
-    }
-
-    const clearUrl = new URL('/api/auth/clear-cookies', req.url);
-    clearUrl.searchParams.set('redirect', '/account/login');
-    clearUrl.searchParams.set('reason', 'token-expired');
-    const response = NextResponse.redirect(clearUrl);
-    if (!isProd) {
-      response.headers.set('x-middleware-redirect', 'login:token-expired');
-      Object.entries(debugHeaders).forEach(([k, v]) => response.headers.set(k, v));
-    }
-    return response;
-  }
-
-  if (isLoggedIn && isAuthRoute) {
+  if (hasAccessToken && isAuthRoute) {
     const res = NextResponse.redirect(new URL('/', req.url));
     if (!isProd) {
       res.headers.set('x-middleware-redirect', 'home:auth-while-logged-in');
@@ -225,36 +138,7 @@ export async function middleware(req: NextRequest) {
     return res;
   }
 
-  // If we verified a token and it's invalid, treat it as logged out (clear cookies).
-  if (tokenVerified === false && tokenCookie) {
-    if (isProtectedRoute) {
-      const loginUrl = new URL('/account/login', req.url);
-      loginUrl.searchParams.set('next', normalizedPath);
-
-      const clearUrl = new URL('/api/auth/clear-cookies', req.url);
-      clearUrl.searchParams.set('redirect', loginUrl.pathname + loginUrl.search);
-      clearUrl.searchParams.set('reason', 'token-invalid');
-
-      const res = NextResponse.redirect(clearUrl);
-      if (!isProd) {
-        res.headers.set('x-middleware-redirect', 'login:token-invalid');
-        Object.entries(debugHeaders).forEach(([k, v]) => res.headers.set(k, v));
-      }
-      return res;
-    }
-
-    const clearUrl = new URL('/api/auth/clear-cookies', req.url);
-    clearUrl.searchParams.set('redirect', normalizedPath);
-    clearUrl.searchParams.set('reason', 'token-invalid');
-    const res = NextResponse.redirect(clearUrl);
-    if (!isProd) {
-      res.headers.set('x-middleware-redirect', 'clear:token-invalid');
-      Object.entries(debugHeaders).forEach(([k, v]) => res.headers.set(k, v));
-    }
-    return res;
-  }
-
-  if (!isLoggedIn && isProtectedRoute) {
+  if (!canAttemptAuthenticatedRequest && isProtectedRoute) {
     const loginUrl = new URL('/account/login', req.url);
     loginUrl.searchParams.set('next', normalizedPath);
     const res = NextResponse.redirect(loginUrl);

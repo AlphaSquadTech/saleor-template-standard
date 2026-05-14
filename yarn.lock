@@ -122,6 +122,7 @@
   resolved "https://registry.npmjs.org/@csstools/css-tokenizer/-/css-tokenizer-3.0.4.tgz"
   integrity sha512-Vd/9EVDiu6PPJt9yAh6roZP6El1xHrdvIVGjyBsHR0RYwNHgL7FJPyIIW4fANJNG6FtyZfvlRPpFI4ZM/lubvw==
 
+<<<<<<< HEAD
 "@emnapi/core@^1.4.3", "@emnapi/core@^1.7.1":
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/@emnapi/core/-/core-1.10.0.tgz#380ccc8f2412ea22d1d972df7f8ee23a3b9c7467"
@@ -141,11 +142,27 @@
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@emnapi/wasi-threads/-/wasi-threads-1.2.1.tgz#28fed21a1ba1ce797c44a070abc94d42f3ae8548"
   integrity sha512-uTII7OYF+/Mes/MrcIOYp5yOtSMLBWSIoLPpcgwipoiKbli6k322tcoFsxoIIxPDqW01SQGAgko4EzZi2BNv2w==
+=======
+"@emnapi/core@^1.7.1":
+  version "1.7.1"
+  dependencies:
+    "@emnapi/wasi-threads" "1.1.0"
+    tslib "^2.4.0"
+
+"@emnapi/runtime@^1.7.1":
+  version "1.7.1"
+  dependencies:
+    tslib "^2.4.0"
+
+"@emnapi/wasi-threads@^1.1.0", "@emnapi/wasi-threads@1.1.0":
+  version "1.1.0"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   dependencies:
     tslib "^2.4.0"
 
 "@esbuild/aix-ppc64@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/aix-ppc64/-/aix-ppc64-0.27.7.tgz#82b74f92aa78d720b714162939fb248c90addf53"
   integrity sha512-EKX3Qwmhz1eMdEJokhALr0YiD0lhQNwDqkPYyPhiSwKrh7/4KRjQc04sZ8db+5DVVnZ1LmbNDI1uAMPEUBnQPg==
 
@@ -162,25 +179,56 @@
 "@esbuild/android-x64@0.27.7":
   version "0.27.7"
   resolved "https://registry.yarnpkg.com/@esbuild/android-x64/-/android-x64-0.27.7.tgz#453143d073326033d2d22caf9e48de4bae274b07"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/aix-ppc64/-/aix-ppc64-0.27.7.tgz"
+  integrity sha512-EKX3Qwmhz1eMdEJokhALr0YiD0lhQNwDqkPYyPhiSwKrh7/4KRjQc04sZ8db+5DVVnZ1LmbNDI1uAMPEUBnQPg==
+
+"@esbuild/android-arm@0.27.7":
+  version "0.27.7"
+  resolved "https://registry.npmjs.org/@esbuild/android-arm/-/android-arm-0.27.7.tgz"
+  integrity sha512-jbPXvB4Yj2yBV7HUfE2KHe4GJX51QplCN1pGbYjvsyCZbQmies29EoJbkEc+vYuU5o45AfQn37vZlyXy4YJ8RQ==
+
+"@esbuild/android-arm64@0.27.7":
+  version "0.27.7"
+  resolved "https://registry.npmjs.org/@esbuild/android-arm64/-/android-arm64-0.27.7.tgz"
+  integrity sha512-62dPZHpIXzvChfvfLJow3q5dDtiNMkwiRzPylSCfriLvZeq0a1bWChrGx/BbUbPwOrsWKMn8idSllklzBy+dgQ==
+
+"@esbuild/android-x64@0.27.7":
+  version "0.27.7"
+  resolved "https://registry.npmjs.org/@esbuild/android-x64/-/android-x64-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-x5VpMODneVDb70PYV2VQOmIUUiBtY3D3mPBG8NxVk5CogneYhkR7MmM3yR/uMdITLrC1ml/NV1rj4bMJuy9MCg==
 
 "@esbuild/darwin-arm64@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/darwin-arm64/-/darwin-arm64-0.27.7.tgz#6f23000fb9b40b7e04b7d0606c0693bd0632f322"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/darwin-arm64/-/darwin-arm64-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-5lckdqeuBPlKUwvoCXIgI2D9/ABmPq3Rdp7IfL70393YgaASt7tbju3Ac+ePVi3KDH6N2RqePfHnXkaDtY9fkw==
 
 "@esbuild/darwin-x64@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/darwin-x64/-/darwin-x64-0.27.7.tgz#27393dd18bb1263c663979c5f1576e00c2d024be"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/darwin-x64/-/darwin-x64-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-rYnXrKcXuT7Z+WL5K980jVFdvVKhCHhUwid+dDYQpH+qu+TefcomiMAJpIiC2EM3Rjtq0sO3StMV/+3w3MyyqQ==
 
 "@esbuild/freebsd-arm64@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/freebsd-arm64/-/freebsd-arm64-0.27.7.tgz#22e4638fa502d1c0027077324c97640e3adf3a62"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/freebsd-arm64/-/freebsd-arm64-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-B48PqeCsEgOtzME2GbNM2roU29AMTuOIN91dsMO30t+Ydis3z/3Ngoj5hhnsOSSwNzS+6JppqWsuhTp6E82l2w==
 
 "@esbuild/freebsd-x64@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/freebsd-x64/-/freebsd-x64-0.27.7.tgz#9224b8e4fea924ce2194e3efc3e9aebf822192d6"
   integrity sha512-jOBDK5XEjA4m5IJK3bpAQF9/Lelu/Z9ZcdhTRLf4cajlB+8VEhFFRjWgfy3M1O4rO2GQ/b2dLwCUGpiF/eATNQ==
 
@@ -197,31 +245,69 @@
 "@esbuild/linux-ia32@0.27.7":
   version "0.27.7"
   resolved "https://registry.yarnpkg.com/@esbuild/linux-ia32/-/linux-ia32-0.27.7.tgz#3f80fb696aa96051a94047f35c85b08b21c36f9e"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/freebsd-x64/-/freebsd-x64-0.27.7.tgz"
+  integrity sha512-jOBDK5XEjA4m5IJK3bpAQF9/Lelu/Z9ZcdhTRLf4cajlB+8VEhFFRjWgfy3M1O4rO2GQ/b2dLwCUGpiF/eATNQ==
+
+"@esbuild/linux-arm@0.27.7":
+  version "0.27.7"
+  resolved "https://registry.npmjs.org/@esbuild/linux-arm/-/linux-arm-0.27.7.tgz"
+  integrity sha512-RkT/YXYBTSULo3+af8Ib0ykH8u2MBh57o7q/DAs3lTJlyVQkgQvlrPTnjIzzRPQyavxtPtfg0EopvDyIt0j1rA==
+
+"@esbuild/linux-arm64@0.27.7":
+  version "0.27.7"
+  resolved "https://registry.npmjs.org/@esbuild/linux-arm64/-/linux-arm64-0.27.7.tgz"
+  integrity sha512-RZPHBoxXuNnPQO9rvjh5jdkRmVizktkT7TCDkDmQ0W2SwHInKCAV95GRuvdSvA7w4VMwfCjUiPwDi0ZO6Nfe9A==
+
+"@esbuild/linux-ia32@0.27.7":
+  version "0.27.7"
+  resolved "https://registry.npmjs.org/@esbuild/linux-ia32/-/linux-ia32-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-GA48aKNkyQDbd3KtkplYWT102C5sn/EZTY4XROkxONgruHPU72l+gW+FfF8tf2cFjeHaRbWpOYa/uRBz/Xq1Pg==
 
 "@esbuild/linux-loong64@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/linux-loong64/-/linux-loong64-0.27.7.tgz#9be1f2c28210b13ebb4156221bba356fe1675205"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/linux-loong64/-/linux-loong64-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-a4POruNM2oWsD4WKvBSEKGIiWQF8fZOAsycHOt6JBpZ+JN2n2JH9WAv56SOyu9X5IqAjqSIPTaJkqN8F7XOQ5Q==
 
 "@esbuild/linux-mips64el@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/linux-mips64el/-/linux-mips64el-0.27.7.tgz#4ab5ee67a3dfcbcb5e8fd7883dae6e735b1163b8"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/linux-mips64el/-/linux-mips64el-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-KabT5I6StirGfIz0FMgl1I+R1H73Gp0ofL9A3nG3i/cYFJzKHhouBV5VWK1CSgKvVaG4q1RNpCTR2LuTVB3fIw==
 
 "@esbuild/linux-ppc64@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/linux-ppc64/-/linux-ppc64-0.27.7.tgz#dac78c689f6499459c4321e5c15032c12307e7ea"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/linux-ppc64/-/linux-ppc64-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-gRsL4x6wsGHGRqhtI+ifpN/vpOFTQtnbsupUF5R5YTAg+y/lKelYR1hXbnBdzDjGbMYjVJLJTd2OFmMewAgwlQ==
 
 "@esbuild/linux-riscv64@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/linux-riscv64/-/linux-riscv64-0.27.7.tgz#050f7d3b355c3a98308e935bc4d6325da91b0027"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/linux-riscv64/-/linux-riscv64-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-hL25LbxO1QOngGzu2U5xeXtxXcW+/GvMN3ejANqXkxZ/opySAZMrc+9LY/WyjAan41unrR3YrmtTsUpwT66InQ==
 
 "@esbuild/linux-s390x@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/linux-s390x/-/linux-s390x-0.27.7.tgz#d61f715ce61d43fe5844ad0d8f463f88cbe4fef6"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/linux-s390x/-/linux-s390x-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-2k8go8Ycu1Kb46vEelhu1vqEP+UeRVj2zY1pSuPdgvbd5ykAw82Lrro28vXUrRmzEsUV0NzCf54yARIK8r0fdw==
 
 "@esbuild/linux-x64@0.27.7":
@@ -231,47 +317,83 @@
 
 "@esbuild/netbsd-arm64@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/netbsd-arm64/-/netbsd-arm64-0.27.7.tgz#1650f2c1b948deeb3ef948f2fc30614723c09690"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/netbsd-arm64/-/netbsd-arm64-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-b6pqtrQdigZBwZxAn1UpazEisvwaIDvdbMbmrly7cDTMFnw/+3lVxxCTGOrkPVnsYIosJJXAsILG9XcQS+Yu6w==
 
 "@esbuild/netbsd-x64@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/netbsd-x64/-/netbsd-x64-0.27.7.tgz#65772ab342c4b3319bf0705a211050aac1b6e320"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/netbsd-x64/-/netbsd-x64-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-OfatkLojr6U+WN5EDYuoQhtM+1xco+/6FSzJJnuWiUw5eVcicbyK3dq5EeV/QHT1uy6GoDhGbFpprUiHUYggrw==
 
 "@esbuild/openbsd-arm64@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/openbsd-arm64/-/openbsd-arm64-0.27.7.tgz#37ed7cfa66549d7955852fce37d0c3de4e715ea1"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/openbsd-arm64/-/openbsd-arm64-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-AFuojMQTxAz75Fo8idVcqoQWEHIXFRbOc1TrVcFSgCZtQfSdc1RXgB3tjOn/krRHENUB4j00bfGjyl2mJrU37A==
 
 "@esbuild/openbsd-x64@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/openbsd-x64/-/openbsd-x64-0.27.7.tgz#01bf3d385855ef50cb33db7c4b52f957c34cd179"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/openbsd-x64/-/openbsd-x64-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-+A1NJmfM8WNDv5CLVQYJ5PshuRm/4cI6WMZRg1by1GwPIQPCTs1GLEUHwiiQGT5zDdyLiRM/l1G0Pv54gvtKIg==
 
 "@esbuild/openharmony-arm64@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/openharmony-arm64/-/openharmony-arm64-0.27.7.tgz#6c1f94b34086599aabda4eac8f638294b9877410"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/openharmony-arm64/-/openharmony-arm64-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-+KrvYb/C8zA9CU/g0sR6w2RBw7IGc5J2BPnc3dYc5VJxHCSF1yNMxTV5LQ7GuKteQXZtspjFbiuW5/dOj7H4Yw==
 
 "@esbuild/sunos-x64@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/sunos-x64/-/sunos-x64-0.27.7.tgz#4b0dd17ae0a6941d2d0fd35a906392517071a90d"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/sunos-x64/-/sunos-x64-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-ikktIhFBzQNt/QDyOL580ti9+5mL/YZeUPKU2ivGtGjdTYoqz6jObj6nOMfhASpS4GU4Q/Clh1QtxWAvcYKamA==
 
 "@esbuild/win32-arm64@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/win32-arm64/-/win32-arm64-0.27.7.tgz#34193ab5565d6ff68ca928ac04be75102ccb2e77"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/win32-arm64/-/win32-arm64-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-7yRhbHvPqSpRUV7Q20VuDwbjW5kIMwTHpptuUzV+AA46kiPze5Z7qgt6CLCK3pWFrHeNfDd1VKgyP4O+ng17CA==
 
 "@esbuild/win32-ia32@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/win32-ia32/-/win32-ia32-0.27.7.tgz#eb67f0e4482515d8c1894ede631c327a4da9fc4d"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/win32-ia32/-/win32-ia32-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-SmwKXe6VHIyZYbBLJrhOoCJRB/Z1tckzmgTLfFYOfpMAx63BJEaL9ExI8x7v0oAO3Zh6D/Oi1gVxEYr5oUCFhw==
 
 "@esbuild/win32-x64@0.27.7":
   version "0.27.7"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.27.7.tgz#8fe30b3088b89b4873c3a6cc87597ae3920c0a8b"
+=======
+  resolved "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.27.7.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-56hiAJPhwQ1R4i+21FVF7V8kSD5zZTdHcVuRFMW0hn753vVfQN8xlx4uOPT4xoGH0Z/oVATuR82AiqSTDIpaHg==
 
 "@eslint-community/eslint-utils@^4.8.0", "@eslint-community/eslint-utils@^4.9.1":
@@ -383,7 +505,7 @@
   dependencies:
     tslib "^2.8.0"
 
-"@graphql-typed-document-node/core@^3.1.1":
+"@graphql-typed-document-node/core@^3.1.1", "@graphql-typed-document-node/core@^3.2.0":
   version "3.2.0"
   resolved "https://registry.npmjs.org/@graphql-typed-document-node/core/-/core-3.2.0.tgz"
   integrity sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==
@@ -421,6 +543,7 @@
   resolved "https://registry.npmjs.org/@img/colour/-/colour-1.0.0.tgz"
   integrity sha512-A5P/LfWGFSl6nsckYtjw9da+19jB8hkJ6ACTGcDfEJ0aE+l2n2El7dsVM7UVHZQ9s2lmYMWlrS21YLy2IR1LUw==
 
+<<<<<<< HEAD
 "@img/sharp-darwin-arm64@0.34.5":
   version "0.34.5"
   resolved "https://registry.yarnpkg.com/@img/sharp-darwin-arm64/-/sharp-darwin-arm64-0.34.5.tgz#6e0732dcade126b6670af7aa17060b926835ea86"
@@ -561,6 +684,11 @@
 "@img/sharp-win32-x64@0.34.5":
   version "0.34.5"
   resolved "https://registry.yarnpkg.com/@img/sharp-win32-x64/-/sharp-win32-x64-0.34.5.tgz#a81ffb00e69267cd0a1d626eaedb8a8430b2b2f8"
+=======
+"@img/sharp-win32-x64@0.34.5":
+  version "0.34.5"
+  resolved "https://registry.npmjs.org/@img/sharp-win32-x64/-/sharp-win32-x64-0.34.5.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-+29YMsqY2/9eFEiW93eqWnuLcWcufowXewwSNIT6UwZdUUCrM3oFjMWH/Z6/TMmb4hlFenmfAVbpWeup2jryCw==
 
 "@inquirer/ansi@^2.0.5":
@@ -662,6 +790,7 @@
     outvariant "^1.4.3"
     strict-event-emitter "^0.5.1"
 
+<<<<<<< HEAD
 "@napi-rs/wasm-runtime@^0.2.11":
   version "0.2.12"
   resolved "https://registry.yarnpkg.com/@napi-rs/wasm-runtime/-/wasm-runtime-0.2.12.tgz#3e78a8b96e6c33a6c517e1894efbd5385a7cb6f2"
@@ -676,6 +805,13 @@
   resolved "https://registry.yarnpkg.com/@napi-rs/wasm-runtime/-/wasm-runtime-1.1.4.tgz#a46bbfedc29751b7170c5d23bc1d8ee8c7e3c1e1"
   integrity sha512-3NQNNgA1YSlJb/kMH1ildASP9HW7/7kYnRI2szWJaofaS1hWmbGI4H+d3+22aGzXXN9IJ+n+GiFVcGipJP18ow==
   dependencies:
+=======
+"@napi-rs/wasm-runtime@^1.1.0":
+  version "1.1.0"
+  dependencies:
+    "@emnapi/core" "^1.7.1"
+    "@emnapi/runtime" "^1.7.1"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
     "@tybys/wasm-util" "^0.10.1"
 
 "@next/env@15.4.10":
@@ -690,6 +826,7 @@
   dependencies:
     fast-glob "3.3.1"
 
+<<<<<<< HEAD
 "@next/swc-darwin-arm64@15.4.8":
   version "15.4.8"
   resolved "https://registry.yarnpkg.com/@next/swc-darwin-arm64/-/swc-darwin-arm64-15.4.8.tgz#f5030219421079036720b5948ea9de9bee02ac34"
@@ -728,6 +865,11 @@
 "@next/swc-win32-x64-msvc@15.4.8":
   version "15.4.8"
   resolved "https://registry.yarnpkg.com/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-15.4.8.tgz#a29a53cd262ec5093b9ac24a5fd5e4540ec64eb4"
+=======
+"@next/swc-win32-x64-msvc@15.4.8":
+  version "15.4.8"
+  resolved "https://registry.npmjs.org/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-15.4.8.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-Exsmf/+42fWVnLMaZHzshukTBxZrSwuuLKFvqhGHJ+mC1AokqieLY/XzAl3jc/CqhXLqLY3RRjkKJ9YnLPcRWg==
 
 "@next/third-parties@^15.5.4":
@@ -1087,87 +1229,155 @@
 
 "@rollup/rollup-android-arm-eabi@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-android-arm-eabi/-/rollup-android-arm-eabi-4.60.2.tgz#a19c645c375158cd5c50a344106f0fa18eb821c4"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-android-arm-eabi/-/rollup-android-arm-eabi-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-dnlp69efPPg6Uaw2dVqzWRfAWRnYVb1XJ8CyyhIbZeaq4CA5/mLeZ1IEt9QqQxmbdvagjLIm2ZL8BxXv5lH4Yw==
 
 "@rollup/rollup-android-arm64@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-android-arm64/-/rollup-android-arm64-4.60.2.tgz#1af19aa9d3ad6d00df2681f59cfcb8bf7499576b"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-android-arm64/-/rollup-android-arm64-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-OqZTwDRDchGRHHm/hwLOL7uVPB9aUvI0am/eQuWMNyFHf5PSEQmyEeYYheA0EPPKUO/l0uigCp+iaTjoLjVoHg==
 
 "@rollup/rollup-darwin-arm64@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-darwin-arm64/-/rollup-darwin-arm64-4.60.2.tgz#3b8463e03ba2a393453fea70e7d907379c27b649"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-darwin-arm64/-/rollup-darwin-arm64-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-UwRE7CGpvSVEQS8gUMBe1uADWjNnVgP3Iusyda1nSRwNDCsRjnGc7w6El6WLQsXmZTbLZx9cecegumcitNfpmA==
 
 "@rollup/rollup-darwin-x64@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-darwin-x64/-/rollup-darwin-x64-4.60.2.tgz#28da23d69fe117f5f0ff330a8549e51bd09f1b6a"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-darwin-x64/-/rollup-darwin-x64-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-gjEtURKLCC5VXm1I+2i1u9OhxFsKAQJKTVB8WvDAHF+oZlq0GTVFOlTlO1q3AlCTE/DF32c16ESvfgqR7343/g==
 
 "@rollup/rollup-freebsd-arm64@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-freebsd-arm64/-/rollup-freebsd-arm64-4.60.2.tgz#94bacac3190f621de1355922b599f3817786044c"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-freebsd-arm64/-/rollup-freebsd-arm64-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-Bcl6CYDeAgE70cqZaMojOi/eK63h5Me97ZqAQoh77VPjMysA/4ORQBRGo3rRy45x4MzVlU9uZxs8Uwy7ZaKnBw==
 
 "@rollup/rollup-freebsd-x64@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-freebsd-x64/-/rollup-freebsd-x64-4.60.2.tgz#8a0094f533b9fda160b5c90ad9e0c78fca341788"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-freebsd-x64/-/rollup-freebsd-x64-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-LU+TPda3mAE2QB0/Hp5VyeKJivpC6+tlOXd1VMoXV/YFMvk/MNk5iXeBfB4MQGRWyOYVJ01625vjkr0Az98OJQ==
 
 "@rollup/rollup-linux-arm-gnueabihf@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-arm-gnueabihf/-/rollup-linux-arm-gnueabihf-4.60.2.tgz#3b7e901a555c7245c87f7440979bee0a1ec882bb"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-linux-arm-gnueabihf/-/rollup-linux-arm-gnueabihf-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-2QxQrM+KQ7DAW4o22j+XZ6RKdxjLD7BOWTP0Bv0tmjdyhXSsr2Ul1oJDQqh9Zf5qOwTuTc7Ek83mOFaKnodPjg==
 
 "@rollup/rollup-linux-arm-musleabihf@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-arm-musleabihf/-/rollup-linux-arm-musleabihf-4.60.2.tgz#ee9a09b72e8ad764cfd6188b32ff1de528ff7ebe"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-linux-arm-musleabihf/-/rollup-linux-arm-musleabihf-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-TbziEu2DVsTEOPif2mKWkMeDMLoYjx95oESa9fkQQK7r/Orta0gnkcDpzwufEcAO2BLBsD7mZkXGFqEdMRRwfw==
 
 "@rollup/rollup-linux-arm64-gnu@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-arm64-gnu/-/rollup-linux-arm64-gnu-4.60.2.tgz#ba483f4aca9be141171d086dbd01ada6ab03b58d"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-linux-arm64-gnu/-/rollup-linux-arm64-gnu-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-bO/rVDiDUuM2YfuCUwZ1t1cP+/yqjqz+Xf2VtkdppefuOFS2OSeAfgafaHNkFn0t02hEyXngZkxtGqXcXwO8Rg==
 
 "@rollup/rollup-linux-arm64-musl@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-arm64-musl/-/rollup-linux-arm64-musl-4.60.2.tgz#17b595b790e6df68e91c5d02526fc832a985ce4f"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-linux-arm64-musl/-/rollup-linux-arm64-musl-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-hr26p7e93Rl0Za+JwW7EAnwAvKkehh12BU1Llm9Ykiibg4uIr2rbpxG9WCf56GuvidlTG9KiiQT/TXT1yAWxTA==
 
 "@rollup/rollup-linux-loong64-gnu@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-loong64-gnu/-/rollup-linux-loong64-gnu-4.60.2.tgz#551718714075a2bfb36a2813c466e3a0e9d56abf"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-linux-loong64-gnu/-/rollup-linux-loong64-gnu-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-pOjB/uSIyDt+ow3k/RcLvUAOGpysT2phDn7TTUB3n75SlIgZzM6NKAqlErPhoFU+npgY3/n+2HYIQVbF70P9/A==
 
 "@rollup/rollup-linux-loong64-musl@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-loong64-musl/-/rollup-linux-loong64-musl-4.60.2.tgz#ba156ed1243447a3d710972001d5dcfe3827ff3d"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-linux-loong64-musl/-/rollup-linux-loong64-musl-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-2/w+q8jszv9Ww1c+6uJT3OwqhdmGP2/4T17cu8WuwyUuuaCDDJ2ojdyYwZzCxx0GcsZBhzi3HmH+J5pZNXnd+Q==
 
 "@rollup/rollup-linux-ppc64-gnu@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-ppc64-gnu/-/rollup-linux-ppc64-gnu-4.60.2.tgz#6a957a709b86ac62ef68e597ac03dbd4336782b1"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-linux-ppc64-gnu/-/rollup-linux-ppc64-gnu-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-11+aL5vKheYgczxtPVVRhdptAM2H7fcDR5Gw4/bTcteuZBlH4oP9f5s9zYO9aGZvoGeBpqXI/9TZZihZ609wKw==
 
 "@rollup/rollup-linux-ppc64-musl@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-ppc64-musl/-/rollup-linux-ppc64-musl-4.60.2.tgz#ca4176b4ad53f3edee3b4bfa6f9ef48ff38f167b"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-linux-ppc64-musl/-/rollup-linux-ppc64-musl-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-i16fokAGK46IVZuV8LIIwMdtqhin9hfYkCh8pf8iC3QU3LpwL+1FSFGej+O7l3E/AoknL6Dclh2oTdnRMpTzFQ==
 
 "@rollup/rollup-linux-riscv64-gnu@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-riscv64-gnu/-/rollup-linux-riscv64-gnu-4.60.2.tgz#4e6b08f72ebeafdb41f3ec433bd228ba8573473b"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-linux-riscv64-gnu/-/rollup-linux-riscv64-gnu-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-49FkKS6RGQoriDSK/6E2GkAsAuU5kETFCh7pG4yD/ylj9rKhTmO3elsnmBvRD4PgJPds5W2PkhC82aVwmUcJ7A==
 
 "@rollup/rollup-linux-riscv64-musl@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-riscv64-musl/-/rollup-linux-riscv64-musl-4.60.2.tgz#a0b8b8580c7680c8086cb3226527e5472253b895"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-linux-riscv64-musl/-/rollup-linux-riscv64-musl-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-mjYNkHPfGpUR00DuM1ZZIgs64Hpf4bWcz9Z41+4Q+pgDx73UwWdAYyf6EG/lRFldmdHHzgrYyge5akFUW0D3mQ==
 
 "@rollup/rollup-linux-s390x-gnu@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-linux-s390x-gnu/-/rollup-linux-s390x-gnu-4.60.2.tgz#79fe15b92ce0bae2b609cf26dd158cd3e2b73634"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-linux-s390x-gnu/-/rollup-linux-s390x-gnu-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-ALyvJz965BQk8E9Al/JDKKDLH2kfKFLTGMlgkAbbYtZuJt9LU8DW3ZoDMCtQpXAltZxwBHevXz5u+gf0yA0YoA==
 
 "@rollup/rollup-linux-x64-gnu@4.60.2":
@@ -1182,32 +1392,56 @@
 
 "@rollup/rollup-openbsd-x64@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-openbsd-x64/-/rollup-openbsd-x64-4.60.2.tgz#5f07c863e74fd428794f1dc5749f321b661d1f17"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-openbsd-x64/-/rollup-openbsd-x64-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-6d4Z3534xitaA1FcMWP7mQPq5zGwBmGbhphh2DwaA1aNIXUu3KTOfwrWpbwI4/Gr0uANo7NTtaykFyO2hPuFLg==
 
 "@rollup/rollup-openharmony-arm64@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-openharmony-arm64/-/rollup-openharmony-arm64-4.60.2.tgz#8e0d71324be0f423428b12b25a2eb8ea8e0a7833"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-openharmony-arm64/-/rollup-openharmony-arm64-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-NetAg5iO2uN7eB8zE5qrZ3CSil+7IJt4WDFLcC75Ymywq1VZVD6qJ6EvNLjZ3rEm6gB7XW5JdT60c6MN35Z85Q==
 
 "@rollup/rollup-win32-arm64-msvc@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-arm64-msvc/-/rollup-win32-arm64-msvc-4.60.2.tgz#a553fdf90a785ace6d7501eed6241c468b088999"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-win32-arm64-msvc/-/rollup-win32-arm64-msvc-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-NCYhOotpgWZ5kdxCZsv6Iudx0wX8980Q/oW4pNFNihpBKsDbEA1zpkfxJGC0yugsUuyDZ7gL37dbzwhR0VI7pQ==
 
 "@rollup/rollup-win32-ia32-msvc@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-ia32-msvc/-/rollup-win32-ia32-msvc-4.60.2.tgz#0fb04f0a88027fbfd323e25a446debce4773868c"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-win32-ia32-msvc/-/rollup-win32-ia32-msvc-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-RXsaOqXxfoUBQoOgvmmijVxJnW2IGB0eoMO7F8FAjaj0UTywUO/luSqimWBJn04WNgUkeNhh7fs7pESXajWmkg==
 
 "@rollup/rollup-win32-x64-gnu@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-gnu/-/rollup-win32-x64-gnu-4.60.2.tgz#aaa9e36dbdc0f0e397e5966dcce1b4285354ede2"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-win32-x64-gnu/-/rollup-win32-x64-gnu-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-qdAzEULD+/hzObedtmV6iBpdL5TIbKVztGiK7O3/KYSf+HIzU257+MX1EXJcyIiDbMAqmbwaufcYPvyRryeZtA==
 
 "@rollup/rollup-win32-x64-msvc@4.60.2":
   version "4.60.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.60.2.tgz#3418dcf1388f2abd6b0ccc08fe1ef205ae76d696"
+=======
+  resolved "https://registry.npmjs.org/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.60.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-Nd/SgG27WoA9e+/TdK74KnHz852TLa94ovOYySo/yMPuTmpckK/jIF2jSwS3g7ELSKXK13/cVdmg1Z/DaCWKxA==
 
 "@rtsao/scc@^1.1.0":
@@ -1219,6 +1453,15 @@
   version "1.15.0"
   resolved "https://registry.npmjs.org/@rushstack/eslint-patch/-/eslint-patch-1.15.0.tgz"
   integrity sha512-ojSshQPKwVvSMR8yT2L/QtUkV5SXi/IfDiJ4/8d6UbTPjiHVmxZzUAzGD8Tzks1b9+qQkZa0isUOvYObedITaw==
+
+"@saleor/auth-sdk@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/@saleor/auth-sdk/-/auth-sdk-1.0.3.tgz"
+  integrity sha512-Bz2sDQsTF6+BLjwE1OSVM95PLzzPD6nLtLRl+mOgq+Rc3Slkgo29CLRwyZW4vGgm1EG2DaTyxDIGipjKzU1cVA==
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.2.0"
+    cookie "^1.0.2"
+    graphql "^16.8.1"
 
 "@sentry/core@9.47.1":
   version "9.47.1"
@@ -1304,37 +1547,65 @@
 
 "@tailwindcss/oxide-android-arm64@4.1.18":
   version "4.1.18"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@tailwindcss/oxide-android-arm64/-/oxide-android-arm64-4.1.18.tgz#79717f87e90135e5d3d23a3d3aecde4ca5595dd5"
+=======
+  resolved "https://registry.npmjs.org/@tailwindcss/oxide-android-arm64/-/oxide-android-arm64-4.1.18.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-dJHz7+Ugr9U/diKJA0W6N/6/cjI+ZTAoxPf9Iz9BFRF2GzEX8IvXxFIi/dZBloVJX/MZGvRuFA9rqwdiIEZQ0Q==
 
 "@tailwindcss/oxide-darwin-arm64@4.1.18":
   version "4.1.18"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@tailwindcss/oxide-darwin-arm64/-/oxide-darwin-arm64-4.1.18.tgz#7fa47608d62d60e9eb020682249d20159667fbb0"
+=======
+  resolved "https://registry.npmjs.org/@tailwindcss/oxide-darwin-arm64/-/oxide-darwin-arm64-4.1.18.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-Gc2q4Qhs660bhjyBSKgq6BYvwDz4G+BuyJ5H1xfhmDR3D8HnHCmT/BSkvSL0vQLy/nkMLY20PQ2OoYMO15Jd0A==
 
 "@tailwindcss/oxide-darwin-x64@4.1.18":
   version "4.1.18"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@tailwindcss/oxide-darwin-x64/-/oxide-darwin-x64-4.1.18.tgz#c05991c85aa2af47bf9d1f8172fe9e4636591e79"
+=======
+  resolved "https://registry.npmjs.org/@tailwindcss/oxide-darwin-x64/-/oxide-darwin-x64-4.1.18.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-FL5oxr2xQsFrc3X9o1fjHKBYBMD1QZNyc1Xzw/h5Qu4XnEBi3dZn96HcHm41c/euGV+GRiXFfh2hUCyKi/e+yw==
 
 "@tailwindcss/oxide-freebsd-x64@4.1.18":
   version "4.1.18"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@tailwindcss/oxide-freebsd-x64/-/oxide-freebsd-x64-4.1.18.tgz#3d48e8d79fd08ece0e02af8e72d5059646be34d0"
+=======
+  resolved "https://registry.npmjs.org/@tailwindcss/oxide-freebsd-x64/-/oxide-freebsd-x64-4.1.18.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-Fj+RHgu5bDodmV1dM9yAxlfJwkkWvLiRjbhuO2LEtwtlYlBgiAT4x/j5wQr1tC3SANAgD+0YcmWVrj8R9trVMA==
 
 "@tailwindcss/oxide-linux-arm-gnueabihf@4.1.18":
   version "4.1.18"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@tailwindcss/oxide-linux-arm-gnueabihf/-/oxide-linux-arm-gnueabihf-4.1.18.tgz#982ecd1a65180807ccfde67dc17c6897f2e50aa8"
+=======
+  resolved "https://registry.npmjs.org/@tailwindcss/oxide-linux-arm-gnueabihf/-/oxide-linux-arm-gnueabihf-4.1.18.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-Fp+Wzk/Ws4dZn+LV2Nqx3IilnhH51YZoRaYHQsVq3RQvEl+71VGKFpkfHrLM/Li+kt5c0DJe/bHXK1eHgDmdiA==
 
 "@tailwindcss/oxide-linux-arm64-gnu@4.1.18":
   version "4.1.18"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@tailwindcss/oxide-linux-arm64-gnu/-/oxide-linux-arm64-gnu-4.1.18.tgz#df49357bc9737b2e9810ea950c1c0647ba6573c3"
+=======
+  resolved "https://registry.npmjs.org/@tailwindcss/oxide-linux-arm64-gnu/-/oxide-linux-arm64-gnu-4.1.18.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-S0n3jboLysNbh55Vrt7pk9wgpyTTPD0fdQeh7wQfMqLPM/Hrxi+dVsLsPrycQjGKEQk85Kgbx+6+QnYNiHalnw==
 
 "@tailwindcss/oxide-linux-arm64-musl@4.1.18":
   version "4.1.18"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@tailwindcss/oxide-linux-arm64-musl/-/oxide-linux-arm64-musl-4.1.18.tgz#b266c12822bf87883cf152615f8fffb8519d689c"
+=======
+  resolved "https://registry.npmjs.org/@tailwindcss/oxide-linux-arm64-musl/-/oxide-linux-arm64-musl-4.1.18.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-1px92582HkPQlaaCkdRcio71p8bc8i/ap5807tPRDK/uw953cauQBT8c5tVGkOwrHMfc2Yh6UuxaH4vtTjGvHg==
 
 "@tailwindcss/oxide-linux-x64-gnu@4.1.18":
@@ -1349,7 +1620,11 @@
 
 "@tailwindcss/oxide-wasm32-wasi@4.1.18":
   version "4.1.18"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@tailwindcss/oxide-wasm32-wasi/-/oxide-wasm32-wasi-4.1.18.tgz#9464df0e28a499aab1c55e97682be37b3a656c88"
+=======
+  resolved "https://registry.npmjs.org/@tailwindcss/oxide-wasm32-wasi/-/oxide-wasm32-wasi-4.1.18.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-LffYTvPjODiP6PT16oNeUQJzNVyJl1cjIebq/rWWBF+3eDst5JGEFSc5cWxyRCJ0Mxl+KyIkqRxk1XPEs9x8TA==
   dependencies:
     "@emnapi/core" "^1.7.1"
@@ -1361,12 +1636,20 @@
 
 "@tailwindcss/oxide-win32-arm64-msvc@4.1.18":
   version "4.1.18"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@tailwindcss/oxide-win32-arm64-msvc/-/oxide-win32-arm64-msvc-4.1.18.tgz#bbcdd59c628811f6a0a4d5b09616967d8fb0c4d4"
+=======
+  resolved "https://registry.npmjs.org/@tailwindcss/oxide-win32-arm64-msvc/-/oxide-win32-arm64-msvc-4.1.18.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-HjSA7mr9HmC8fu6bdsZvZ+dhjyGCLdotjVOgLA2vEqxEBZaQo9YTX4kwgEvPCpRh8o4uWc4J/wEoFzhEmjvPbA==
 
 "@tailwindcss/oxide-win32-x64-msvc@4.1.18":
   version "4.1.18"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/@tailwindcss/oxide-win32-x64-msvc/-/oxide-win32-x64-msvc-4.1.18.tgz#9c628d04623aa4c3536c508289f58d58ba4b3fb1"
+=======
+  resolved "https://registry.npmjs.org/@tailwindcss/oxide-win32-x64-msvc/-/oxide-win32-x64-msvc-4.1.18.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-bJWbyYpUlqamC8dpR7pfjA0I7vdF6t5VpUGMWRkXVE3AXgIZjYUYAK7II1GNaxR8J1SSrSrppRar8G++JekE3Q==
 
 "@tailwindcss/oxide@4.1.18":
@@ -1446,10 +1729,15 @@
   resolved "https://registry.npmjs.org/@trpc/server/-/server-11.10.0.tgz"
   integrity sha512-zZjTrR6He61e5TiT7e/bQqab/jRcXBZM8Fg78Yoo8uh5pz60dzzbYuONNUCOkafv5ppXVMms4NHYfNZgzw50vg==
 
+<<<<<<< HEAD
 "@tybys/wasm-util@^0.10.0", "@tybys/wasm-util@^0.10.1":
   version "0.10.2"
   resolved "https://registry.yarnpkg.com/@tybys/wasm-util/-/wasm-util-0.10.2.tgz#12b3a1b33db1f9cad4ddff1f604ab7dd00bf464e"
   integrity sha512-RoBvJ2X0wuKlWFIjrwffGw1IqZHKQqzIchKaadZZfnNpsAYp2mM0h36JtPCjNDAHGgYez/15uMBpfGwchhiMgg==
+=======
+"@tybys/wasm-util@^0.10.1":
+  version "0.10.1"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   dependencies:
     tslib "^2.4.0"
 
@@ -1686,6 +1974,7 @@
     "@typescript-eslint/types" "8.55.0"
     eslint-visitor-keys "^4.2.1"
 
+<<<<<<< HEAD
 "@unrs/resolver-binding-android-arm-eabi@1.11.1":
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/@unrs/resolver-binding-android-arm-eabi/-/resolver-binding-android-arm-eabi-1.11.1.tgz#9f5b04503088e6a354295e8ea8fe3cb99e43af81"
@@ -1781,6 +2070,11 @@
 "@unrs/resolver-binding-win32-x64-msvc@1.11.1":
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/@unrs/resolver-binding-win32-x64-msvc/-/resolver-binding-win32-x64-msvc-1.11.1.tgz#538b1e103bf8d9864e7b85cc96fa8d6fb6c40777"
+=======
+"@unrs/resolver-binding-win32-x64-msvc@1.11.1":
+  version "1.11.1"
+  resolved "https://registry.npmjs.org/@unrs/resolver-binding-win32-x64-msvc/-/resolver-binding-win32-x64-msvc-1.11.1.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-lrW200hZdbfRtztbygyaq/6jP6AKE8qQN2KvPcJ+x7wiD038YtnYtZ82IMNJ69GJibV7bwL3y9FgK+5w/pYt6g==
 
 "@vitest/coverage-v8@^3.2.4":
@@ -2360,7 +2654,7 @@ configstore@^7.0.0:
     graceful-fs "^4.2.11"
     xdg-basedir "^5.1.0"
 
-cookie@^1.1.1:
+cookie@^1.0.2, cookie@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/cookie/-/cookie-1.1.1.tgz"
   integrity sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==
@@ -3202,9 +3496,20 @@ forwarded-parse@2.1.2:
   resolved "https://registry.npmjs.org/forwarded-parse/-/forwarded-parse-2.1.2.tgz"
   integrity sha512-alTFZZQDKMporBH77856pXgzhEzaUVmLCDk+egLgIgHst3Tpndzz8MnKe+GzRJRfvVdn69HhpW7cmXzvtLvJAw==
 
+<<<<<<< HEAD
 fsevents@~2.3.2, fsevents@~2.3.3:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.3.tgz#cac6407785d03675a2a5e1a5305c697b347d90d6"
+=======
+fsevents@~2.3.2:
+  version "2.3.2"
+  resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
+  integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
+
+fsevents@~2.3.3:
+  version "2.3.3"
+  resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
 
 function-bind@^1.1.2:
@@ -3351,7 +3656,11 @@ graphql-tag@^2.12.6:
   dependencies:
     tslib "^2.1.0"
 
+<<<<<<< HEAD
 graphql@^16.11.0, graphql@^16.13.2:
+=======
+"graphql@^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0", "graphql@^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0", "graphql@^15.0.0 || ^16.0.0", graphql@^16.11.0, graphql@^16.13.2, graphql@^16.8.1:
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   version "16.13.2"
   resolved "https://registry.npmjs.org/graphql/-/graphql-16.13.2.tgz"
   integrity sha512-5bJ+nf/UCpAjHM8i06fl7eLyVC9iuNAjm9qzkiu2ZGhM0VscSvS6WDPfAwkdkBuoXGM9FJSbKl6wylMwP9Ktig==
@@ -3920,11 +4229,6 @@ json5@^1.0.2:
     object.assign "^4.1.4"
     object.values "^1.1.6"
 
-jwt-decode@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.npmjs.org/jwt-decode/-/jwt-decode-4.0.0.tgz"
-  integrity sha512-+KJGIyHgkGuIq3IEBNftfhW/LfWhXUIY6OmyVWjliu5KH1y0fw7VQ8YndE2O4qZdMSd9SqbnC8GOcZEy0Om7sA==
-
 keyv@^4.5.4:
   version "4.5.4"
   resolved "https://registry.npmjs.org/keyv/-/keyv-4.5.4.tgz"
@@ -4004,72 +4308,128 @@ lighthouse@^13.1.0:
 
 lightningcss-android-arm64@1.30.2:
   version "1.30.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/lightningcss-android-arm64/-/lightningcss-android-arm64-1.30.2.tgz#6966b7024d39c94994008b548b71ab360eb3a307"
+=======
+  resolved "https://registry.npmjs.org/lightningcss-android-arm64/-/lightningcss-android-arm64-1.30.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-BH9sEdOCahSgmkVhBLeU7Hc9DWeZ1Eb6wNS6Da8igvUwAe0sqROHddIlvU06q3WyXVEOYDZ6ykBZQnjTbmo4+A==
 
 lightningcss-android-arm64@1.31.1:
   version "1.31.1"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/lightningcss-android-arm64/-/lightningcss-android-arm64-1.31.1.tgz#609ff48332adff452a8157a7c2842fd692a8eac4"
+=======
+  resolved "https://registry.npmjs.org/lightningcss-android-arm64/-/lightningcss-android-arm64-1.31.1.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-HXJF3x8w9nQ4jbXRiNppBCqeZPIAfUo8zE/kOEGbW5NZvGc/K7nMxbhIr+YlFlHW5mpbg/YFPdbnCh1wAXCKFg==
 
 lightningcss-darwin-arm64@1.30.2:
   version "1.30.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/lightningcss-darwin-arm64/-/lightningcss-darwin-arm64-1.30.2.tgz#a5fa946d27c029e48c7ff929e6e724a7de46eb2c"
+=======
+  resolved "https://registry.npmjs.org/lightningcss-darwin-arm64/-/lightningcss-darwin-arm64-1.30.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-ylTcDJBN3Hp21TdhRT5zBOIi73P6/W0qwvlFEk22fkdXchtNTOU4Qc37SkzV+EKYxLouZ6M4LG9NfZ1qkhhBWA==
 
 lightningcss-darwin-arm64@1.31.1:
   version "1.31.1"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/lightningcss-darwin-arm64/-/lightningcss-darwin-arm64-1.31.1.tgz#a13da040a7929582bab3ace9a67bdc146e99fc2d"
+=======
+  resolved "https://registry.npmjs.org/lightningcss-darwin-arm64/-/lightningcss-darwin-arm64-1.31.1.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-02uTEqf3vIfNMq3h/z2cJfcOXnQ0GRwQrkmPafhueLb2h7mqEidiCzkE4gBMEH65abHRiQvhdcQ+aP0D0g67sg==
 
 lightningcss-darwin-x64@1.30.2:
   version "1.30.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/lightningcss-darwin-x64/-/lightningcss-darwin-x64-1.30.2.tgz#5ce87e9cd7c4f2dcc1b713f5e8ee185c88d9b7cd"
+=======
+  resolved "https://registry.npmjs.org/lightningcss-darwin-x64/-/lightningcss-darwin-x64-1.30.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-oBZgKchomuDYxr7ilwLcyms6BCyLn0z8J0+ZZmfpjwg9fRVZIR5/GMXd7r9RH94iDhld3UmSjBM6nXWM2TfZTQ==
 
 lightningcss-darwin-x64@1.31.1:
   version "1.31.1"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/lightningcss-darwin-x64/-/lightningcss-darwin-x64-1.31.1.tgz#f7482c311273571ec0c2bd8277c1f5f6e90e03a4"
+=======
+  resolved "https://registry.npmjs.org/lightningcss-darwin-x64/-/lightningcss-darwin-x64-1.31.1.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-1ObhyoCY+tGxtsz1lSx5NXCj3nirk0Y0kB/g8B8DT+sSx4G9djitg9ejFnjb3gJNWo7qXH4DIy2SUHvpoFwfTA==
 
 lightningcss-freebsd-x64@1.30.2:
   version "1.30.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/lightningcss-freebsd-x64/-/lightningcss-freebsd-x64-1.30.2.tgz#6ae1d5e773c97961df5cff57b851807ef33692a5"
+=======
+  resolved "https://registry.npmjs.org/lightningcss-freebsd-x64/-/lightningcss-freebsd-x64-1.30.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-c2bH6xTrf4BDpK8MoGG4Bd6zAMZDAXS569UxCAGcA7IKbHNMlhGQ89eRmvpIUGfKWNVdbhSbkQaWhEoMGmGslA==
 
 lightningcss-freebsd-x64@1.31.1:
   version "1.31.1"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/lightningcss-freebsd-x64/-/lightningcss-freebsd-x64-1.31.1.tgz#91df1bb290f1cb7bb2af832d7d0d8809225e0124"
+=======
+  resolved "https://registry.npmjs.org/lightningcss-freebsd-x64/-/lightningcss-freebsd-x64-1.31.1.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-1RINmQKAItO6ISxYgPwszQE1BrsVU5aB45ho6O42mu96UiZBxEXsuQ7cJW4zs4CEodPUioj/QrXW1r9pLUM74A==
 
 lightningcss-linux-arm-gnueabihf@1.30.2:
   version "1.30.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/lightningcss-linux-arm-gnueabihf/-/lightningcss-linux-arm-gnueabihf-1.30.2.tgz#62c489610c0424151a6121fa99d77731536cdaeb"
+=======
+  resolved "https://registry.npmjs.org/lightningcss-linux-arm-gnueabihf/-/lightningcss-linux-arm-gnueabihf-1.30.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-eVdpxh4wYcm0PofJIZVuYuLiqBIakQ9uFZmipf6LF/HRj5Bgm0eb3qL/mr1smyXIS1twwOxNWndd8z0E374hiA==
 
 lightningcss-linux-arm-gnueabihf@1.31.1:
   version "1.31.1"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/lightningcss-linux-arm-gnueabihf/-/lightningcss-linux-arm-gnueabihf-1.31.1.tgz#c3cad5ae8b70045f21600dc95295ab6166acf57e"
+=======
+  resolved "https://registry.npmjs.org/lightningcss-linux-arm-gnueabihf/-/lightningcss-linux-arm-gnueabihf-1.31.1.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-OOCm2//MZJ87CdDK62rZIu+aw9gBv4azMJuA8/KB74wmfS3lnC4yoPHm0uXZ/dvNNHmnZnB8XLAZzObeG0nS1g==
 
 lightningcss-linux-arm64-gnu@1.30.2:
   version "1.30.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/lightningcss-linux-arm64-gnu/-/lightningcss-linux-arm64-gnu-1.30.2.tgz#2a3661b56fe95a0cafae90be026fe0590d089298"
+=======
+  resolved "https://registry.npmjs.org/lightningcss-linux-arm64-gnu/-/lightningcss-linux-arm64-gnu-1.30.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-UK65WJAbwIJbiBFXpxrbTNArtfuznvxAJw4Q2ZGlU8kPeDIWEX1dg3rn2veBVUylA2Ezg89ktszWbaQnxD/e3A==
 
 lightningcss-linux-arm64-gnu@1.31.1:
   version "1.31.1"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/lightningcss-linux-arm64-gnu/-/lightningcss-linux-arm64-gnu-1.31.1.tgz#a5c4f6a5ac77447093f61b209c0bd7fef1f0a3e3"
+=======
+  resolved "https://registry.npmjs.org/lightningcss-linux-arm64-gnu/-/lightningcss-linux-arm64-gnu-1.31.1.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-WKyLWztD71rTnou4xAD5kQT+982wvca7E6QoLpoawZ1gP9JM0GJj4Tp5jMUh9B3AitHbRZ2/H3W5xQmdEOUlLg==
 
 lightningcss-linux-arm64-musl@1.30.2:
   version "1.30.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.30.2.tgz#d7ddd6b26959245e026bc1ad9eb6aa983aa90e6b"
+=======
+  resolved "https://registry.npmjs.org/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.30.2.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-5Vh9dGeblpTxWHpOx8iauV02popZDsCYMPIgiuw97OJ5uaDsL86cnqSFs5LZkG3ghHoX5isLgWzMs+eD1YzrnA==
 
 lightningcss-linux-arm64-musl@1.31.1:
   version "1.31.1"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.31.1.tgz#af26ab8f829b727ada0a200938a6c8796ff36900"
+=======
+  resolved "https://registry.npmjs.org/lightningcss-linux-arm64-musl/-/lightningcss-linux-arm64-musl-1.31.1.tgz"
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   integrity sha512-mVZ7Pg2zIbe3XlNbZJdjs86YViQFoJSpc41CbVmKBPiGmC4YrfeOyz65ms2qpAobVd7WQsbW4PdsSJEMymyIMg==
 
 lightningcss-linux-x64-gnu@1.30.2:
@@ -4094,10 +4454,32 @@ lightningcss-linux-x64-musl@1.31.1:
 
 lightningcss-win32-arm64-msvc@1.30.2:
   version "1.30.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/lightningcss-win32-arm64-msvc/-/lightningcss-win32-arm64-msvc-1.30.2.tgz#ab4a8a8a2e6a82a4531e8bbb6bf0ff161ee6625a"
   integrity sha512-FZn+vaj7zLv//D/192WFFVA0RgHawIcHqLX9xuWiQt7P0PtdFEVaxgF9rjM/IRYHQXNnk61/H/gb2Ei+kUQ4xQ==
 
 lightningcss-win32-arm64-msvc@1.31.1:
+=======
+  resolved "https://registry.npmjs.org/lightningcss-win32-arm64-msvc/-/lightningcss-win32-arm64-msvc-1.30.2.tgz"
+  integrity sha512-FZn+vaj7zLv//D/192WFFVA0RgHawIcHqLX9xuWiQt7P0PtdFEVaxgF9rjM/IRYHQXNnk61/H/gb2Ei+kUQ4xQ==
+
+lightningcss-win32-arm64-msvc@1.31.1:
+  version "1.31.1"
+  resolved "https://registry.npmjs.org/lightningcss-win32-arm64-msvc/-/lightningcss-win32-arm64-msvc-1.31.1.tgz"
+  integrity sha512-aJReEbSEQzx1uBlQizAOBSjcmr9dCdL3XuC/6HLXAxmtErsj2ICo5yYggg1qOODQMtnjNQv2UHb9NpOuFtYe4w==
+
+lightningcss-win32-x64-msvc@1.30.2:
+  version "1.30.2"
+  resolved "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.30.2.tgz"
+  integrity sha512-5g1yc73p+iAkid5phb4oVFMB45417DkRevRbt/El/gKXJk4jid+vPFF/AXbxn05Aky8PapwzZrdJShv5C0avjw==
+
+lightningcss-win32-x64-msvc@1.31.1:
+  version "1.31.1"
+  resolved "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.31.1.tgz"
+  integrity sha512-I9aiFrbd7oYHwlnQDqr1Roz+fTz61oDDJX7n9tYF9FJymH1cIN1DtKw3iYt6b8WZgEjoNwVSncwF4wx/ZedMhw==
+
+lightningcss@^1.21.0, lightningcss@^1.31.1:
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   version "1.31.1"
   resolved "https://registry.yarnpkg.com/lightningcss-win32-arm64-msvc/-/lightningcss-win32-arm64-msvc-1.31.1.tgz#79000fb8c57e94a91b8fc643e74d5a54407d7080"
   integrity sha512-aJReEbSEQzx1uBlQizAOBSjcmr9dCdL3XuC/6HLXAxmtErsj2ICo5yYggg1qOODQMtnjNQv2UHb9NpOuFtYe4w==
@@ -4352,7 +4734,11 @@ netmask@^2.0.2:
   resolved "https://registry.npmjs.org/netmask/-/netmask-2.1.1.tgz"
   integrity sha512-eonl3sLUha+S1GzTPxychyhnUzKyeQkZ7jLjKrBagJgPla13F+uQ71HgpFefyHgqrjEbCPkDArxYsjY8/+gLKA==
 
+<<<<<<< HEAD
 next@15.4.10:
+=======
+"next@^13.0.0 || ^14.0.0 || ^15.0.0", "next@^13.4.4 || ^14.0.0 || ^15.0.0", next@15.4.10:
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   version "15.4.10"
   resolved "https://registry.npmjs.org/next/-/next-15.4.10.tgz"
   integrity sha512-itVlc79QjpKMFMRhP+kbGKaSG/gZM6RCvwhEbwmCNF06CdDiNaoHcbeg0PqkEa2GOcn8KJ0nnc7+yL7EjoYLHQ==
@@ -4771,7 +5157,11 @@ react-async-script@^1.2.0:
     hoist-non-react-statics "^3.3.0"
     prop-types "^15.5.0"
 
+<<<<<<< HEAD
 react-dom@19.1.0:
+=======
+"react-dom@^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc", "react-dom@^17.0 || ^18.0 || ^19.0", "react-dom@^18.0.0 || ^19.0.0", "react-dom@^18.2.0 || ^19.0.0 ", "react-dom@^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0", react-dom@19.1.0:
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   version "19.1.0"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-19.1.0.tgz"
   integrity sha512-Xs1hdnE+DyKgeHJeJznQmYMIBG3TKIHJJT95Q58nHLSrElKlGQqDTR2HQ9fx5CN/Gk6Vh/kupBTDLU11/nDk/g==
@@ -4815,7 +5205,11 @@ react-paginate@^8.3.0:
   dependencies:
     prop-types "^15"
 
+<<<<<<< HEAD
 react@19.1.0:
+=======
+react@*, "react@^16 || ^17 || ^18 || ^19", "react@^16.3 || ^17.0 || ^18.0 || ^19.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc", "react@^18.0.0 || ^19.0.0", "react@^18.2.0 || ^19.0.0", "react@^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0", react@^19.1.0, "react@>= 16.8.0 || 17.x.x || ^18.0.0-0 || ^19.0.0-0", react@>=16.4.1, react@>=18.0.0, react@19.1.0:
+>>>>>>> c3e1a46 (feat(api): add route for viral sweep configuration retrieval)
   version "19.1.0"
   resolved "https://registry.npmjs.org/react/-/react-19.1.0.tgz"
   integrity sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==
@@ -5624,6 +6018,11 @@ tsconfig-paths@^3.15.0:
     strip-bom "^3.0.0"
 
 tslib@^2.0.1, tslib@^2.1.0, tslib@^2.3.0, tslib@^2.4.0, tslib@^2.8.0:
+  version "2.8.1"
+  resolved "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz"
+  integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
+
+tslib@^2.4.0:
   version "2.8.1"
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz"
   integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==

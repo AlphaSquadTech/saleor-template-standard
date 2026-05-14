@@ -1,0 +1,1 @@
+export { GET } from '@core/app/api/viralsweep/get-config/route';
