@@ -1,1 +1,1 @@
-export { default, metadata } from "@core/app/search/layout";
+export { default } from "@core/app/search/layout";
