@@ -5,7 +5,7 @@ import {
   GET_DEALER_PAGE,
 } from "@/graphql/queries/getBecomeDealerPage";
 import { useRecaptcha } from "@/hooks/useRecaptcha";
-import { useQuery } from "@apollo/client";
+import { useGraphQLQuery as useQuery } from "@/graphql/hooks";
 import React, { Suspense, useEffect, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useAppConfiguration } from "@/app/components/providers/ServerAppConfigurationProvider";
