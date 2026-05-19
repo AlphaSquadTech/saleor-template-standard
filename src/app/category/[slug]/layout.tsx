@@ -1,1 +1,1 @@
-export { default, generateMetadata } from '@core/app/category/[slug]/layout'
+export { default } from '@core/app/category/[slug]/layout'
