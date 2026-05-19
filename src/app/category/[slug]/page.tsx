@@ -1,1 +1,1 @@
-export { default, dynamic, generateMetadata } from '@core/app/category/[slug]/page'
+export { default, generateMetadata } from '@core/app/category/[slug]/page'

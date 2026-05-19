@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, Suspense } from "react";
-import { useQuery } from "@apollo/client";
+import { useGraphQLQuery as useQuery } from "@/graphql/hooks";
 import ReCAPTCHA from "react-google-recaptcha";
 import Heading from "@/app/components/reuseableUI/heading";
 import Breadcrumb from "@/app/components/reuseableUI/breadcrumb";
