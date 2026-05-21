@@ -44,12 +44,12 @@ export async function generateDynamicPagesSitemap(): Promise<MetadataRoute.Sitem
 export async function getBlogSitemapEntries(): Promise<MetadataRoute.Sitemap> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-    // Import blog posts from the constant file
-    const { blogPosts } = await import('@/app/blog/constant')
+    const { fetchBlogPages } = await import('@/graphql/queries/getBlogs')
+    const blogPosts = await fetchBlogPages()
 
     return blogPosts.map(post => ({
       url: `${baseUrl}/blog/${post.slug}`,
-      lastModified: new Date(post.date),
+      lastModified: post.date ? new Date(post.date) : new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.6,
     }))
