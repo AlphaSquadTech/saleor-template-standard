@@ -1,0 +1,114 @@
+name: Test and Build
+
+on:
+  pull_request:
+  merge_group:
+  repository_dispatch:
+    types: [core-pr-verification]
+  workflow_dispatch:
+
+jobs:
+  test-build:
+    name: Test and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      NEXT_PUBLIC_THEME_LAYOUT: showroom
+      NEXT_PUBLIC_THEME_PALETTE: forest-green
+      NEXT_PUBLIC_BRAND_NAME: AutoParts Store
+      NEXT_PUBLIC_LOGO_URL: /Logo.png
+      NEXT_PUBLIC_APP_ICON: /icons/appIcon.png
+      NEXT_PUBLIC_API_URL: ""
+      NEXT_PUBLIC_SALEOR_CHANNEL: default-channel
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      NEXT_PUBLIC_STOREFRONT_URL: http://localhost:3000
+      SESSION_COOKIE_SECRET: ci-session-cookie-secret
+      NEXT_PUBLIC_PAYPAL_ENV: sandbox
+      NEXT_PUBLIC_PAYPAL_APP_URL: https://paypal-app-url.com
+      NEXT_PUBLIC_AUTHORIZENET_ENV: sandbox
+      CORE_PR_REPO: ${{ github.event.client_payload.core_repo || '' }}
+      CORE_PR_REF: ${{ github.event.client_payload.core_ref || '' }}
+      CORE_PR_SHA: ${{ github.event.client_payload.core_sha || '' }}
+
+    steps:
+      - name: Mark core PR check pending
+        if: github.event_name == 'repository_dispatch'
+        env:
+          GH_TOKEN: ${{ secrets.CORE_PR_CHECK_TOKEN || secrets.REPO_ACCESS_TOKEN || '' }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "No core status token configured; skipping commit status update."
+            exit 0
+          fi
+
+          gh api \
+            --method POST \
+            "/repos/$CORE_PR_REPO/statuses/$CORE_PR_SHA" \
+            -f state=pending \
+            -f context="saleor-template-standard / test-build" \
+            -f description="Running template tests and build against this core PR" \
+            -f target_url="$RUN_URL"
+
+      - name: Setup SSH deploy key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SALEOR_ADVANCE_SSH_PRIVATE_KEY_BASE64 }}" | base64 --decode > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Checkout core PR ref
+        if: github.event_name == 'repository_dispatch'
+        run: |
+          git -C core remote set-url origin "git@github.com:$CORE_PR_REPO.git"
+          git -C core fetch origin "$CORE_PR_REF"
+          git -C core checkout --detach FETCH_HEAD
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Mark core PR check result
+        if: always() && github.event_name == 'repository_dispatch'
+        env:
+          GH_TOKEN: ${{ secrets.CORE_PR_CHECK_TOKEN || secrets.REPO_ACCESS_TOKEN || '' }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "No core status token configured; skipping commit status update."
+            exit 0
+          fi
+
+          if [ "${{ job.status }}" = "success" ]; then
+            STATE=success
+            DESCRIPTION="Template tests and build passed"
+          else
+            STATE=failure
+            DESCRIPTION="Template tests or build failed"
+          fi
+
+          gh api \
+            --method POST \
+            "/repos/$CORE_PR_REPO/statuses/$CORE_PR_SHA" \
+            -f state="$STATE" \
+            -f context="saleor-template-standard / test-build" \
+            -f description="$DESCRIPTION" \
+            -f target_url="$RUN_URL"
