@@ -61,8 +61,9 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
+
+      - name: Initialize core submodule
+        run: git submodule update --init --recursive
 
       - name: Checkout core PR ref
         if: github.event_name == 'repository_dispatch'
