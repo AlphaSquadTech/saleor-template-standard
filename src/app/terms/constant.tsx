@@ -32,9 +32,9 @@ export const TermsAndConditionsSections = [
       <>
         We will never provide your personally identifiable information to third
         parties for their use in marketing their products or services to you
-        without your consent. Aero Exhaust takes great pride in having you as a
-        customer and we will ensure your privacy as a customer. Aero Exhaust
-        does not sell or exchange names or any other information about our
+        without your consent. We take great pride in having you as a customer
+        and we will ensure your privacy as a customer. We do not sell or
+        exchange names or any other information about our
         customers with third parties.
       </>
     ),
@@ -64,7 +64,7 @@ export const TermsAndConditionsSections = [
         We may use the information collected through pixel tags, tracking links
         and similar technology in combination with your personally identifiable
         information.<br /><br />
-        www.aeroexhaust.com does recognize your ISP (internet
+        Our Site does recognize your ISP (internet
         service provider), however, we cannot identify you as an individual. If
         you make an on-line purchase we do collect information (such as sales
         statistics and traffic patterns) to help improve your shopping
