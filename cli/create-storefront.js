@@ -74,7 +74,7 @@ const API_URL = args["api-url"] || "";
 const ASSETS_URL = args["assets-url"] || "";
 const TEMPLATE_URL =
   args["template-url"] ||
-  "https://github.com/AlphaSquadTech/saleor-template-standard.git";
+  "https://github.com/webshopmanager/saleor-template-standard.git";
 
 const TARGET_DIR = path.resolve(process.cwd(), TENANT_NAME);
 
@@ -90,7 +90,7 @@ function run(cmd, opts = {}) {
 console.log(`
 ${c.bold}${c.cyan}┌──────────────────────────────────────┐
 │     create-storefront  v1.0.0        │
-│     AlphaSquad Storefront Scaffold   │
+│  Web Shop Manager Storefront Scaffold │
 └──────────────────────────────────────┘${c.reset}
 `);
 info(`Tenant:   ${c.bold}${TENANT_NAME}${c.reset}`);

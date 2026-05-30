@@ -17,9 +17,8 @@ export const privacyPolicySections = [
     title: "Updating Personal InformationHistory",
     description: (
       <>
-        If you are a registered member at Aero Exhaust, you can change your
-        personal information at any time by updating your information at
-        check-out.
+        If you are a registered member, you can change your personal
+        information at any time by updating your information at check-out.
       </>
     ),
   },
@@ -56,7 +55,7 @@ export const privacyPolicySections = [
     title: "SECURITY",
     description: (
       <>
-        Aero Exhaust seeks to protect the security of your personal information
+        We seek to protect the security of your personal information
         both online and offline. All credit card transactions are secure. Every
         on-line order is encrypted and sent through a secure server, using SSL
         technology to prevent information from being intercepted.
@@ -78,7 +77,7 @@ export const privacyPolicySections = [
     title: "Notification of Policy Changes",
     description: (
       <>
-        Aero Exhaust reserves the right to revise this Privacy Policy in the
+        We reserve the right to revise this Privacy Policy in the
         future by posting changes at this location and we may make changes at
         any time without notification.
       </>
@@ -115,9 +114,9 @@ export const privacyPolicySections = [
       <>
         We will never provide your personally identifiable information to third
         parties for their use in marketing their products or services to you
-        without your consent. Aero Exhaust takes great pride in having you as a
-        customer and we will ensure your privacy as a customer. Aero Exhaust
-        does not sell or exchange names or any other information about our
+        without your consent. We take great pride in having you as a customer
+        and we will ensure your privacy as a customer. We do not sell or
+        exchange names or any other information about our
         customers with third parties.
       </>
     ),
@@ -147,7 +146,7 @@ export const privacyPolicySections = [
         We may use the information collected through pixel tags, tracking links
         and similar technology in combination with your personally identifiable
         information.<br/><br/>
-        www.aeroexhaust.com does recognize your ISP (internet
+        Our Site does recognize your ISP (internet
         service provider), however, we cannot identify you as an individual. If
         you make an on-line purchase we do collect information (such as sales
         statistics and traffic patterns) to help improve your shopping

@@ -44,7 +44,7 @@ If you prefer to set things up manually:
 
 ```bash
 # 1. Clone the template
-git clone https://github.com/AlphaSquadTech/saleor-template-standard.git my-store
+git clone https://github.com/webshopmanager/saleor-template-standard.git my-store
 cd my-store
 
 # 2. Initialize the core submodule
