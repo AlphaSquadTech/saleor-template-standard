@@ -49,6 +49,20 @@ export async function middleware(req: NextRequest) {
       ? pathname.slice(0, -1)
       : pathname;
 
+  // Legacy legal routes now live as Saleor-driven pages. Permanently (308)
+  // redirect the old static paths to their canonical Saleor slugs, preserving
+  // any query string.
+  const LEGAL_REDIRECTS: Record<string, string> = {
+    '/privacy': '/privacy-policy',
+    '/terms': '/terms-and-conditions',
+  };
+  const legalTarget = LEGAL_REDIRECTS[normalizedPath];
+  if (legalTarget) {
+    const target = new URL(legalTarget, req.url);
+    target.search = req.nextUrl.search;
+    return NextResponse.redirect(target, 308);
+  }
+
   // Handle redirects for category and product slugs at root level
   // If URL is /<slug> where slug starts with 'c-', redirect to /category/<slug>
   // If URL is /<slug> where slug starts with 'i-', redirect to /product/<slug>

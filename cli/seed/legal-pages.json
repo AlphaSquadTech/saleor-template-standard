@@ -1,0 +1,312 @@
+[
+  {
+    "slug": "privacy-policy",
+    "title": "Privacy Policy",
+    "content": {
+      "blocks": [
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "<i>Last updated: {{EFFECTIVE_DATE}}</i>"
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Information We Collect", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "When you use this Site, we may collect information you provide directly, such as your name, billing and shipping address, email address, phone number, and payment details when you place an order or create an account. We also automatically collect certain technical information, such as your IP address, browser type, and the pages you view, to help us operate and improve the Site."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "How We Use Your Information", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "We use the information we collect to process and fulfill your orders, provide customer support, communicate with you about your account or purchases, improve our products and services, and, where you have opted in, send you marketing communications. You may opt out of marketing emails at any time using the unsubscribe link in those messages."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Cookies, IP Addresses, and Tracking Technologies", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "We may place a cookie on your device so we can recognize you as a return visitor and personalize your experience. We may also use session cookies to help you shop; these typically expire when you complete an order. You can set your browser to notify you of, or automatically reject, cookies, though some features of the Site may then be limited. We may use IP addresses, pixel tags, and similar technologies to analyze trends, administer the Site, and understand traffic patterns."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Service Providers and Payment Processing", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "We may engage other companies to perform functions on our behalf, such as customer support, web hosting, order fulfillment, data analysis, and email delivery. These third parties may be given access to the personal information they need to perform their functions, but may not use it for any other purpose. Payments are processed by third-party payment processors under their own security standards (PCI-DSS); {{STORE_NAME}} does not store your full payment card number."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Disclosure of Personal Information", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "{{STORE_NAME}} does not sell your personal information for money, and we will not provide it to third parties for their own marketing without your consent. We may disclose information when we believe in good faith it is necessary to comply with applicable law, regulation, legal process, or a governmental request, or to protect against fraud and reduce credit risk."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Your Privacy Rights (California and Other States)", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "Depending on where you live, you may have the right to request access to the personal information we hold about you, to request correction or deletion of that information, to opt out of the sale or sharing of personal information or targeted advertising, and to not be discriminated against for exercising these rights. {{STORE_NAME}} does not sell your personal information for money. To exercise any of these rights, contact us using the details on our Contact page; we may need to verify your identity before responding. You may also designate an authorized agent to make a request on your behalf."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Children's Privacy", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "This Site is intended for adults and is not directed to children under 13. We do not knowingly collect personal information from children under 13. If you believe a child has provided us personal information, please contact us and we will delete it."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Data Retention", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "We retain personal information for as long as your account is active or as needed to provide services, comply with our legal obligations, resolve disputes, and enforce our agreements."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Security", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "{{STORE_NAME}} uses commercially reasonable safeguards to protect your personal information. Orders are transmitted over an encrypted connection using industry-standard encryption (TLS). However, no method of transmission over the Internet or electronic storage is completely secure; while we strive to protect your personal information, we cannot guarantee its absolute security, and you provide it at your own risk. Please do not send payment card numbers by email, which is not a secure channel. We display only the last four digits of your card number on your account."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Third-Party Links", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "This Privacy Policy applies only to information collected on this Site. Our Site may contain links to or from other websites, and we are not responsible for the privacy practices of those sites. We encourage you to read the privacy policies of any other websites you visit."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Your Choices", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "If you have an account, you can review and update your personal information at any time by signing in. You may also contact us to request access to, correction of, or deletion of your personal information, subject to any legal obligations that require us to retain it."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Changes to This Policy", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "{{STORE_NAME}} reserves the right to revise this Privacy Policy from time to time by posting the updated policy on this page. Changes are effective when posted. Please review this page periodically to stay informed about how we protect your information."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Contact Us", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "If you have questions about this Privacy Policy or how we handle your information, please contact {{STORE_NAME}} using the contact details provided on our Contact page."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "slug": "terms-and-conditions",
+    "title": "Terms and Conditions",
+    "content": {
+      "blocks": [
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "<i>Last updated: {{EFFECTIVE_DATE}}</i>"
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Acceptance of These Terms", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "By accessing this Site and placing an order, you agree to these Terms and Conditions. If you do not agree, please do not use the Site. {{STORE_NAME}} may update these Terms from time to time, and your continued use of the Site constitutes acceptance of the current version."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Pricing and Availability", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "All prices are shown in the currency indicated at checkout and are subject to change without notice. We make every effort to display accurate pricing and availability, but errors may occur. {{STORE_NAME}} reserves the right to correct any errors and to cancel or refuse any order placed for a product listed at an incorrect price or with incorrect information."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Orders and Payment", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "An order confirmation means we have received your order, not that we have accepted it yet. We may accept or decline any order, and we may limit or cancel quantities purchased per person or per order. Payment must be received and verified before your order ships."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Product Information and Fitment", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "We work to describe products and fitment as accurately as possible, but we do not warrant that product descriptions, images, or fitment information are error-free. It is the customer's responsibility to confirm that a part is correct for their application before purchase. If you are unsure, please contact us before ordering. {{STORE_NAME}} is not responsible for labor, installation, downtime, or other costs arising from a part that does not fit or does not perform as expected."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Off-Road and Competition Use", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "Certain products are designed for off-road, racing, or competition use only and may not be legal for use on public roads or highways. It is the customer's responsibility to comply with all applicable federal, state, and local laws, including emissions regulations, before purchasing or installing such products."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Shipping, Returns, and Cancellations", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "Shipping timeframes are estimates and are not guaranteed. Returns, exchanges, and cancellations are handled in accordance with the return terms and any product-specific terms shown at the time of purchase or provided by our customer support team. Some items may be non-returnable or subject to restocking fees as noted on the product page."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Intellectual Property", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "All content on this Site, including text, graphics, logos, and images, is the property of {{STORE_NAME}} or its licensors and is protected by applicable intellectual property laws. You may not reproduce, distribute, or use this content without prior written permission."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Limitation of Liability", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "To the fullest extent permitted by law, {{STORE_NAME}} shall not be liable for any direct, indirect, special, incidental, or consequential damages arising from your use of the Site or any product purchased, including loss of business or profit. Some jurisdictions do not allow these limitations, so they may not apply to you."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Severability", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "If any provision of these Terms is found to be unenforceable or invalid, that provision will be limited or eliminated to the minimum extent necessary, and the remaining provisions will remain in full force and effect."
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Governing Law", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "These Terms are governed by the laws of the state in which {{STORE_NAME}} is based, without regard to its conflict-of-law provisions. Any disputes arising under these Terms will be subject to the courts of that state. (PORT-TIME REQUIREMENT: replace with the tenant's named state and venue.)"
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Contact Us", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "If you have questions about these Terms and Conditions, please contact {{STORE_NAME}} using the contact details provided on our Contact page."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "slug": "warranty",
+    "title": "Warranty",
+    "content": {
+      "blocks": [
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "<i>NEUTRAL PLACEHOLDER. Replace with the tenant's REAL warranty policy at port time; do not present generic terms as binding.</i>"
+          }
+        },
+        {
+          "type": "header",
+          "data": { "text": "Warranty Information", "level": 2 }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "Warranty coverage varies by product and manufacturer. Many items sold by {{STORE_NAME}} are covered by the original manufacturer's warranty, while some products may carry a limited warranty or no warranty. Any warranty that applies to a specific product, along with its terms and duration, is determined by the manufacturer of that product."
+          }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "Manufacturer warranties generally cover defects in materials and workmanship and do not cover damage from improper installation, misuse, accidents, racing or commercial use, normal wear, or cosmetic issues. Warranties typically do not cover the cost of removal, labor, reinstallation, shipping, or other services unless stated otherwise by the manufacturer."
+          }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "Except as expressly stated in writing, {{STORE_NAME}} makes no warranties of its own and disclaims all implied warranties, including merchantability and fitness for a particular purpose, to the fullest extent permitted by law. Any applicable warranty is that of the manufacturer."
+          }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "To ask about the warranty on a specific product or to start a claim, please contact {{STORE_NAME}} using the details on our Contact page. Warranty claims generally require the original proof of purchase, and returns may require a Return Material Authorization (RMA) number issued before the product is sent back. For full, product-specific warranty terms, please refer to the documentation included with your product or the manufacturer's published warranty."
+          }
+        }
+      ]
+    }
+  }
+]

@@ -29,9 +29,7 @@ export function generateStaticPagesSitemap(): MetadataRoute.Sitemap {
     
     // Legal pages
     { url: '/privacy-policy', priority: 0.5, changeFrequency: 'yearly' as const },
-    { url: '/privacy', priority: 0.5, changeFrequency: 'yearly' as const },
     { url: '/terms-and-conditions', priority: 0.5, changeFrequency: 'yearly' as const },
-    { url: '/terms', priority: 0.5, changeFrequency: 'yearly' as const },
     { url: '/warranty', priority: 0.5, changeFrequency: 'yearly' as const },
     { url: '/shipping-returns', priority: 0.5, changeFrequency: 'yearly' as const },
     
