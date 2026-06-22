@@ -72,13 +72,6 @@ jobs:
       - name: Initialize core submodule
         run: git submodule update --init --recursive
 
-      - name: Checkout core PR ref
-        if: github.event_name == 'repository_dispatch'
-        run: |
-          git -C core remote set-url origin "git@github.com:$CORE_PR_REPO.git"
-          git -C core fetch origin "$CORE_PR_REF"
-          git -C core checkout --detach "$CORE_PR_SHA"
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -87,6 +80,13 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Checkout core PR ref
+        if: github.event_name == 'repository_dispatch'
+        run: |
+          git -C core remote set-url origin "git@github.com:$CORE_PR_REPO.git"
+          git -C core fetch origin "$CORE_PR_REF"
+          git -C core checkout --detach "$CORE_PR_SHA"
 
       - name: Run tests
         run: npm test
