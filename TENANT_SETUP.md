@@ -182,3 +182,51 @@ Core may have added new dependencies or changed APIs:
 ```bash
 chmod +x cli/create-storefront.js
 ```
+
+## Standard header & brand chrome (configuration, not code)
+
+The standard way to brand a tenant's header/footer and pick its layout is
+**configuration only** — no header/footer component forks. Requires core with
+PR #157 (`feat/header-brand-tokens-inline-nav`) or later.
+
+### 1. Layout (env)
+
+| Variable | Values | Effect |
+|---|---|---|
+| `NEXT_PUBLIC_HEADER_LAYOUT` | `inline` / unset | `inline` = single-row header, nav links beside the logo (the Foose/Jess pattern — the fleet standard). Unset = classic two-row header. |
+
+### 2. Brand chrome (theme tokens in `src/app/globals.css`)
+
+Add inside your `[data-theme="<tenant>"]` block. Every token falls back to the
+current default, so set only what your brand needs:
+
+```css
+--color-header-bg: #cc0000;      /* desktop+mobile nav bar (default: secondary-950) */
+--color-topbar-bg: #660000;      /* contact strip above the header (default: secondary-950) */
+--color-header-accent: #330000;  /* nav hover/active/underline (default: primary-500) */
+--footer-bg-color: #001d5a;      /* footer background (default: secondary-950) */
+--footer-fg-color: #e7ecf7;      /* footer link + site-info body text (default: secondary-50/100) */
+--color-footer-accent: #cfe0ff;  /* footer column headings (default: primary-600) */
+```
+
+**Dark-brand warning:** if your brand primary is a dark color (navy, deep
+green), the defaults will render footer headings/site-info nearly invisible on
+the dark footer — set `--color-footer-accent` and `--footer-fg-color` to light
+values. Same logic for `--color-header-accent` on a colored header bar.
+
+### 3. Content (Saleor CMS — fetched at runtime, no rebuild)
+
+- **`navbar` menu** — the desktop nav links (curated-wins: when this menu
+  exists, categories are not auto-listed; add a "Catalog" item pointing at
+  `/category` if you want one).
+- **`footer` menu** — footer link columns.
+- **`site-info` page** — phone/email/hours for the top bar and footer.
+
+### 4. Socials (env, footer icons render only when set)
+
+`NEXT_PUBLIC_FACEBOOK_URL`, `NEXT_PUBLIC_TWITTER_URL`,
+`NEXT_PUBLIC_YOUTUBE_URL`, `NEXT_PUBLIC_INSTAGRAM_URL`
+
+Reference implementations: `diversified-shafts-solutions-storefront` (navy,
+`develop`) and `auto-shafts-storefront` (two-tone red). Both carry zero
+header/footer component overrides.
